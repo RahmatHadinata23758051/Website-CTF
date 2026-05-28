@@ -69,6 +69,12 @@ func main() {
 	// Challenge Endpoint Routes
 	routes.SetupChallengeRoutes(api, cfg)
 
+	// Submission Endpoint Routes
+	routes.SetupSubmissionRoutes(api, cfg)
+
+	// Scoreboard Endpoint Routes
+	routes.SetupScoreboardRoutes(api)
+
 	// 5. Start Server
 	log.Printf("[SERVER] Starting backend on port %s in %s mode...\n", cfg.Port, cfg.AppEnv)
 	if err := app.Listen(":" + cfg.Port); err != nil {
