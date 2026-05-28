@@ -28,8 +28,8 @@ type ChallengeDetailDTO struct {
 	Category      string    `json:"category"`
 	Difficulty    string    `json:"difficulty"`
 	Points        int       `json:"points"`
-	AttachmentURL string    `json:"attachment_url,omitempty"`
-	ExternalLink  string    `json:"external_link,omitempty"`
+	AttachmentURL *string   `json:"attachment_url"`
+	ExternalLink  *string   `json:"external_link"`
 	IsSolved      bool      `json:"is_solved"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
@@ -109,6 +109,16 @@ func (s *ChallengeService) GetChallengeDetail(slug string, userIDStr string) (*C
 		}
 	}
 
+	var attachmentURL *string
+	if c.AttachmentURL != "" {
+		attachmentURL = &c.AttachmentURL
+	}
+
+	var externalLink *string
+	if c.ExternalLink != "" {
+		externalLink = &c.ExternalLink
+	}
+
 	return &ChallengeDetailDTO{
 		ID:            c.ID,
 		Title:         c.Title,
@@ -117,8 +127,8 @@ func (s *ChallengeService) GetChallengeDetail(slug string, userIDStr string) (*C
 		Category:      c.Category,
 		Difficulty:    c.Difficulty,
 		Points:        c.Points,
-		AttachmentURL: c.AttachmentURL,
-		ExternalLink:  c.ExternalLink,
+		AttachmentURL: attachmentURL,
+		ExternalLink:  externalLink,
 		IsSolved:      isSolved,
 		CreatedAt:     c.CreatedAt,
 		UpdatedAt:     c.UpdatedAt,
