@@ -67,7 +67,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "Web",
 			Difficulty:    "Easy",
 			Points:        100,
-			FlagHash:      utils.HashFlag("flag{c00k1es_ar3_del1c10us}", flagSalt),
+			FlagHash:      utils.HashFlag("CTF{cookie_monster_found}", flagSalt),
 			IsActive:      true,
 			ExternalLink:  "http://localhost:8080/api/health",
 		},
@@ -78,7 +78,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "Crypto",
 			Difficulty:    "Easy",
 			Points:        150,
-			FlagHash:      utils.HashFlag("flag{rsa_n_and_e_are_public}", flagSalt),
+			FlagHash:      utils.HashFlag("CTF{rsa_basics_solved}", flagSalt),
 			IsActive:      true,
 		},
 		{
@@ -88,7 +88,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "Pwn",
 			Difficulty:    "Medium",
 			Points:        300,
-			FlagHash:      utils.HashFlag("flag{b0f_r3t_2_w1n}", flagSalt),
+			FlagHash:      utils.HashFlag("CTF{buffer_overflow_beginner}", flagSalt),
 			IsActive:      true,
 		},
 		{
@@ -98,7 +98,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "Reverse",
 			Difficulty:    "Hard",
 			Points:        500,
-			FlagHash:      utils.HashFlag("flag{rev_4nd_d3comp1l3_master}", flagSalt),
+			FlagHash:      utils.HashFlag("CTF{secure_vault_reversed}", flagSalt),
 			IsActive:      true,
 		},
 		{
@@ -108,20 +108,31 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "OSINT",
 			Difficulty:    "Easy",
 			Points:        100,
-			FlagHash:      utils.HashFlag("flag{ex1f_daTa_n3v3r_l1es}", flagSalt),
+			FlagHash:      utils.HashFlag("CTF{exif_detective_found}", flagSalt),
 			IsActive:      true,
 		},
 	}
 
 	for _, ch := range challenges {
-		var count int64
-		db.Model(&models.Challenge{}).Where("slug = ?", ch.Slug).Count(&count)
-		if count == 0 {
+		var existing models.Challenge
+		err := db.Where("slug = ?", ch.Slug).First(&existing).Error
+		if err != nil {
 			if err := db.Create(&ch).Error; err != nil {
 				log.Printf("[SEEDER] Warning: Failed to seed challenge %s: %v\n", ch.Title, err)
 			} else {
 				log.Printf("[SEEDER] Created challenge %s (%d pts)\n", ch.Title, ch.Points)
 			}
+		} else {
+			// Self-healing database GORM update for existing records
+			existing.FlagHash = ch.FlagHash
+			existing.Points = ch.Points
+			existing.Description = ch.Description
+			existing.Title = ch.Title
+			existing.Category = ch.Category
+			existing.Difficulty = ch.Difficulty
+			existing.ExternalLink = ch.ExternalLink
+			db.Save(&existing)
+			log.Printf("[SEEDER] Updated existing challenge %s with standard CTF flag hashes\n", ch.Title)
 		}
 	}
 }
