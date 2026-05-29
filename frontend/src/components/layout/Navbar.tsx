@@ -47,7 +47,7 @@ export function Navbar() {
           <span className="flex h-1.5 w-1.5 relative">
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyber-cyan"></span>
           </span>
-          <span className="font-mono text-slate-500 tracking-widest uppercase">ARENA PLATFORM SESSION ACTIVE</span>
+          <span className="font-mono text-slate-500 tracking-widest uppercase">LAB ONLINE // SESSION ACTIVE</span>
         </div>
         
         <div className="flex items-center gap-2">
@@ -61,17 +61,16 @@ export function Navbar() {
       {/* CORE NAVBAR */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 h-18 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3.5 hover:opacity-90 group transition-all">
-          <div className="h-8 w-8 border border-cyber-cyan flex items-center justify-center relative group-hover:bg-cyber-cyan/5 transition-all duration-300">
-            <div 
-              className="w-3.5 h-3.5 bg-cyber-cyan" 
-              style={{ clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)" }}
-            ></div>
-          </div>
+          <img
+            src="/favicon.svg"
+            alt="RBLXSec logo"
+            className="h-8 w-8 object-contain group-hover:brightness-110 transition-all duration-300 select-none"
+          />
           <div className="text-left font-mono">
             <span className="font-bold text-slate-50 tracking-[0.2em] text-sm sm:text-base">
-              NEXUS<span className="text-cyber-cyan">//</span>CTF
+              RBLX<span className="text-cyber-cyan">SEC</span>
             </span>
-            <div className="text-[7px] text-slate-500 tracking-widest uppercase -mt-1 select-none">CHALLENGE ARENA STAGE</div>
+            <div className="text-[7px] text-slate-500 tracking-widest uppercase -mt-1 select-none">SECURITY LABORATORY</div>
           </div>
         </Link>
 
@@ -134,7 +133,7 @@ export function Navbar() {
                 to="/register"
                 className="px-4 py-2 bg-cyber-cyan hover:opacity-95 text-slate-950 rounded text-xs font-mono font-bold uppercase tracking-wider transition-all"
               >
-                Join CTF
+                Register
               </Link>
             </div>
           )}
