@@ -62,6 +62,8 @@ services:
       REDIS_PASSWORD: ""
     ports:
       - "8080:8080"
+    volumes:
+      - backend_uploads:/app/storage/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -84,9 +86,11 @@ services:
     depends_on:
       - backend
 
-# ==============================================================================
 # Persistent Volumes Definition
 # ==============================================================================
 volumes:
   postgres_data:
     driver: local
+  backend_uploads:
+    driver: local
+

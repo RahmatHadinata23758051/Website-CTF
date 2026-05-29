@@ -18,3 +18,8 @@ backend
 build/
 bin/
 tmp/
+
+# Stored uploads exclusion
+storage/uploads/challenges/*
+!storage/uploads/challenges/.gitkeep
+

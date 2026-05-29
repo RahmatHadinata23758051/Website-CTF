@@ -54,3 +54,8 @@ yarn-error.log*
 # Reference materials
 design-acuan/
 
+# Uploaded challenge attachments
+backend/storage/uploads/challenges/*
+!backend/storage/uploads/challenges/.gitkeep
+
+
