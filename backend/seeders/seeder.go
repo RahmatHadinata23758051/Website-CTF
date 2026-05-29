@@ -2,6 +2,7 @@ package seeders
 
 import (
 	"log"
+	"os"
 
 	"ctf-platform/backend/internal/models"
 	"ctf-platform/backend/internal/utils"
@@ -17,11 +18,14 @@ func Seed(db *gorm.DB, flagSalt string) {
 	// 1. Seed Users
 	seedUsers(db)
 
-	// 2. Seed Challenges
-	seedChallenges(db, flagSalt)
-
-	// 3. Seed Hints
-	seedHints(db)
+	// 2. Seed Challenges & Hints optionally
+	if os.Getenv("SEED_SAMPLE_DATA") == "true" {
+		log.Println("[SEEDER] SEED_SAMPLE_DATA=true: seeding sample challenges and hints...")
+		seedChallenges(db, flagSalt)
+		seedHints(db)
+	} else {
+		log.Println("[SEEDER] SEED_SAMPLE_DATA is not true: skipping challenges/hints seeding (starting with clean database).")
+	}
 
 	log.Println("[SEEDER] Seeding process completed.")
 }
@@ -33,27 +37,29 @@ func seedUsers(db *gorm.DB) {
 	adminHash, _ := utils.HashPassword("admin123!")
 	competitorHash, _ := utils.HashPassword("user123!")
 
-	users := []models.User{
-		{
-			// Primary admin account for Phase 17 admin API testing
-			Name:         "Admin",
-			Email:        "admin@rblxsec.local",
-			PasswordHash: adminHash,
-			Role:         "admin",
-		},
-		{
-			// Legacy admin account — kept for backwards compatibility
+	var users []models.User
+
+	// Main administrative bootstrap profile
+	users = append(users, models.User{
+		Name:         "Admin",
+		Email:        "admin@rblxsec.local",
+		PasswordHash: adminHash,
+		Role:         "admin",
+	})
+
+	// Sample players seeded only if requested for dev testing
+	if os.Getenv("SEED_SAMPLE_DATA") == "true" {
+		users = append(users, models.User{
 			Name:         "Admin Operator",
 			Email:        "admin@ctf.com",
 			PasswordHash: adminHash,
 			Role:         "admin",
-		},
-		{
+		}, models.User{
 			Name:         "Competitor One",
 			Email:        "competitor@ctf.com",
 			PasswordHash: competitorHash,
 			Role:         "user",
-		},
+		})
 	}
 
 	for _, user := range users {

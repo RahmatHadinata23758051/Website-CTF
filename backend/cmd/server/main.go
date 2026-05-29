@@ -81,6 +81,9 @@ func main() {
 	// Hint Endpoint Routes
 	routes.SetupHintRoutes(api, cfg)
 
+	// Stats Endpoint Routes
+	routes.SetupStatsRoutes(api, cfg)
+
 	// Admin Endpoint Routes (admin-only, JWT + role guard applied inside)
 	routes.SetupAdminRoutes(api, cfg)
 
