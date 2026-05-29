@@ -1,6 +1,6 @@
 import { create } from "zustand";
+import axios from "axios";
 import type { User } from "../features/auth/types";
-import { api } from "../lib/api";
 
 interface AuthState {
   user: User | null;
@@ -37,8 +37,13 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     set({ isLoading: true });
     try {
-      // Direct call using axios instance to retrieve authenticated user details
-      const response = await api.get("/auth/me");
+      const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+      // Call using raw axios to avoid circular dependency with api client
+      const response = await axios.get(`${baseURL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.data && response.data.success && response.data.data?.user) {
         set({
           user: response.data.data.user,

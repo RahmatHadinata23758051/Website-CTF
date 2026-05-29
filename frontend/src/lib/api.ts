@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "../stores/authStore";
 
 // 1. Fetch backend API base URL from Vite environment, defaulting to standard dev port
 const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
@@ -32,10 +33,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("ctf_token");
-      // Use dynamic import to prevent circular dependency imports at build-time
-      import("../stores/authStore").then(({ useAuthStore }) => {
-        useAuthStore.getState().clearAuth();
-      }).catch(() => {});
+      useAuthStore.getState().clearAuth();
     }
     return Promise.reject(error);
   }

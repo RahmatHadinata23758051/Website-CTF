@@ -155,7 +155,7 @@ export function ChallengeDetailPage() {
             </div>
 
             {/* Render with custom, beautiful placeholder values inside metadata */}
-            <ChallengeMeta author="Nexus_Arena" solveCount={challenge.points > 200 ? 5 : 23} />
+            <ChallengeMeta author="RBLXSec_Lab" solveCount={challenge.points > 200 ? 5 : 23} />
           </div>
 
           {/* SPECIFICATION DESCRIPTION */}
@@ -164,7 +164,7 @@ export function ChallengeDetailPage() {
             <div className="font-sans text-slate-300 text-sm leading-relaxed space-y-3">
               <p>{challenge.description}</p>
               <p className="text-[11px] text-slate-500 font-mono border-l border-white/[0.06] pl-3 py-0.5 leading-normal select-none">
-                SUBMISSION FORMAT SIGNATURE CONFORMS TO: <code className="font-mono text-cyber-cyan font-bold bg-[#121212] px-1 border border-white/[0.04]">CTF{'{secret_key}'}</code>
+                SUBMISSION FORMAT SIGNATURE CONFORMS TO: <code className="font-mono text-cyber-cyan font-bold bg-[#121212] px-1 border border-white/[0.04]">iet{'{secret_key}'}</code>
               </p>
             </div>
           </div>
