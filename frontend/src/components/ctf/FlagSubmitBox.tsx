@@ -37,7 +37,7 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
     }
 
     if (!isAuthenticated) {
-      setLocalError("Authentication required. Please secure an active operator session.");
+      setLocalError("Authentication required. Please sign in to submit flags.");
       return;
     }
 
@@ -109,7 +109,7 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
             <ShieldAlert className="h-6 w-6" />
           </div>
           <div className="space-y-1.5 max-w-sm">
-            <h4 className="font-mono font-bold text-xs text-slate-200 uppercase tracking-wider">OPERATOR SESSION OFFLINE</h4>
+            <h4 className="font-mono font-bold text-xs text-slate-200 uppercase tracking-wider">LOGIN REQUIRED</h4>
             <p className="font-sans text-[11px] text-slate-500 leading-normal">
               You must authenticate with a cryptographic signature before you can submit flag checksum vectors.
             </p>
@@ -122,7 +122,7 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
             </Link>
             <Link to="/register" className="flex-1">
               <Button variant="secondary" className="w-full py-2.5">
-                Join CTF
+                Register
               </Button>
             </Link>
           </div>
@@ -134,7 +134,7 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
             <div className="relative flex-grow">
               <input
                 type="text"
-                placeholder="FLAG{hex_key_checksum_or_secret_signature}"
+                placeholder="iet{secret_key_parameters}"
                 required
                 value={flagInput}
                 disabled={submitMutation.isPending}
@@ -179,7 +179,7 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
             <HelpCircle className="h-3.5 w-3.5 text-slate-650 shrink-0" />
             <span>SUBMISSION SIGNATURE FORMAT IS STRICTLY:</span>
             <code className="text-cyber-cyan bg-[#121212] px-1 border border-white/[0.04] font-semibold">
-              CTF{'{secret_key_parameters}'}
+              iet{'{secret_key_parameters}'}
             </code>
           </div>
         </form>

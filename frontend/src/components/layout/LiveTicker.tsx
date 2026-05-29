@@ -2,12 +2,13 @@ import { Zap } from "lucide-react";
 
 export function LiveTicker() {
   const events = [
-    "0xVoid_Walker solved Poisoned Signature (JWT Hijack) (+100 pts)",
-    "Competitor One solved Stack Smash: Kernel Return Poisoning (+600 pts)",
-    "NEW OPERATOR: alice_xor entered the challenge arena",
-    "nullPointer_X solved ProtoPoison: Prototype Pollution (+400 pts)",
-    "Sudo_Hacks unlocked badge 'Lone Wolf Solves' (Epic)",
-    "Competitor Two solved CJS Oracle: Symmetric Padding Underflow (+250 pts)",
+    "RBLXSEC LAB ONLINE",
+    "NEW CHALLENGES AVAILABLE — BROWSE THE CHALLENGE GRID",
+    "SUBMIT FLAGS THROUGH THE CHALLENGE PANEL",
+    "SCOREBOARD SYNCHRONIZED — TRACK YOUR RANK",
+    "WEB / CRYPTO / PWN / FORENSICS / OSINT / REVERSE / STEG",
+    "BACKEND API ONLINE — ALL SERVICES OPERATIONAL",
+    "BREAK THE LAB. CAPTURE THE FLAG.",
   ];
 
   // Repeat events to facilitate smooth infinite looping

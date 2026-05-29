@@ -81,7 +81,7 @@ export function PodiumCard({ player }: PodiumCardProps) {
               {isSelf && <UserCheck className="h-3.5 w-3.5 text-cyber-emerald shrink-0" />}
             </h3>
             <span className="font-mono text-[9px] text-slate-500 tracking-widest uppercase font-bold select-none">
-              {isSelf ? "ACTIVE SESSION OPERATOR" : "INDIVIDUAL OPERATOR"}
+              {isSelf ? "ACTIVE SESSION" : "PARTICIPANT"}
             </span>
           </div>
         </div>

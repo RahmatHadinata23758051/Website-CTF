@@ -19,14 +19,14 @@ export function TerminalPanel() {
           <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]"></div>
           <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F]"></div>
         </div>
-        <span className="font-mono text-[10px] text-slate-500 select-none">nullbyte@nexus-ctf — exploit-shell</span>
+        <span className="font-mono text-[10px] text-slate-500 select-none">operator@rblxsec — exploit-shell</span>
         <span className="w-8"></span>
       </div>
 
       {/* Console Body */}
       <div className="p-5 font-code text-xs sm:text-[13px] leading-relaxed min-h-[290px] space-y-2 select-text selection:bg-cyber-cyan/20">
         <div className="flex items-start gap-2">
-          <span className="text-cyber-cyan font-semibold select-none">nullbyte $</span>
+          <span className="text-cyber-cyan font-semibold select-none">operator $</span>
           <span>./exploit.py --target web_02</span>
         </div>
 
@@ -54,8 +54,8 @@ export function TerminalPanel() {
           </div>
         )}
         {terminalLineIdx >= 7 && (
-          <div className="text-cyber-emerald font-bold tracking-[0.05em] py-0.5 bg-cyber-emerald/5 px-2 border border-cyber-emerald/20 inline-block">
-            NEXUS{"{"}r0p_sh3ll_obta1n3d_s1920{"}"}
+          <div className="text-slate-500 font-mono text-xs py-0.5 px-2 bg-slate-950 border border-white/[0.04] inline-block">
+            [redacted] — submit through the challenge panel
           </div>
         )}
         {terminalLineIdx >= 8 && (
