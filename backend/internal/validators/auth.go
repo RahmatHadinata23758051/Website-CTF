@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// Email regex pattern for validation
-var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,4}$`)
+// Email regex pattern for validation — supports standard and internal dev domains (e.g. .local)
+var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,10}$`)
 
 // RegisterRequest represents fields needed to register a competitor.
 type RegisterRequest struct {
