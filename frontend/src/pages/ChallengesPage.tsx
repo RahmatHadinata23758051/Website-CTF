@@ -6,8 +6,10 @@ import { Alert } from "../components/ui/Alert";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ChallengeCard } from "../components/ctf/ChallengeCard";
 import { useChallenges } from "../features/challenges/hooks";
+import { useAuthStore } from "../stores/authStore";
 
 export function ChallengesPage() {
+  const user = useAuthStore((state) => state.user);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState<Category | "All">("All");
   const [selectedDifficulty, setSelectedDifficulty] = React.useState<Difficulty | "All">("All");
@@ -227,9 +229,15 @@ export function ChallengesPage() {
               </div>
             ) : (
               <EmptyState 
-                title="NO VECTORS RESOLVED"
-                description="No challenges match current filters."
-                onActionClick={resetFilters} 
+                title={rawChallenges.length === 0 ? "NO ACTIVE CHALLENGES AVAILABLE YET" : "NO VECTORS RESOLVED"}
+                description={
+                  rawChallenges.length === 0
+                    ? (user?.role === "admin"
+                      ? "Initialize challenges via the admin panel console to stage new vectors."
+                      : "The arena coordinators have not provisioned any challenge tasks yet. Check back soon.")
+                    : "No challenges match current filters."
+                }
+                onActionClick={rawChallenges.length === 0 ? undefined : resetFilters} 
               />
             )
           )}

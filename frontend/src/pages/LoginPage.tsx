@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { Alert } from "../components/ui/Alert";
@@ -8,6 +8,7 @@ import { useAuthStore } from "../stores/authStore";
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const setAuth = useAuthStore((state) => state.setAuth);
 
   const [email, setEmail] = React.useState("");
@@ -24,7 +25,8 @@ export function LoginPage() {
       const response = await login(email, password);
       if (response.success && response.data) {
         setAuth(response.data.token, response.data.user);
-        navigate("/profile");
+        const from = (location.state as any)?.from || "/challenges";
+        navigate(from);
       } else {
         setError(response.message || "Authentication rejected. Invalid credentials.");
       }

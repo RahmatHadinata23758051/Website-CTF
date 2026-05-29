@@ -8,6 +8,9 @@ import { ChallengeDetailPage } from "../pages/ChallengeDetailPage";
 import { ScoreboardPage } from "../pages/ScoreboardPage";
 import { ProfilePage } from "../pages/ProfilePage";
 import { AdminChallengesPage } from "../pages/AdminChallengesPage";
+import { RulesPage } from "../pages/legal/RulesPage";
+import { TermsPage } from "../pages/legal/TermsPage";
+import { PrivacyPage } from "../pages/legal/PrivacyPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
@@ -28,20 +31,32 @@ export const router = createBrowserRouter([
         element: <RegisterPage />,
       },
       {
-        path: "challenges",
-        element: <ChallengesPage />,
+        path: "rules",
+        element: <RulesPage />,
       },
       {
-        path: "challenges/:slug",
-        element: <ChallengeDetailPage />,
+        path: "terms",
+        element: <TermsPage />,
       },
       {
-        path: "scoreboard",
-        element: <ScoreboardPage />,
+        path: "privacy",
+        element: <PrivacyPage />,
       },
       {
         element: <ProtectedRoute />,
         children: [
+          {
+            path: "challenges",
+            element: <ChallengesPage />,
+          },
+          {
+            path: "challenges/:slug",
+            element: <ChallengeDetailPage />,
+          },
+          {
+            path: "scoreboard",
+            element: <ScoreboardPage />,
+          },
           {
             path: "profile",
             element: <ProfilePage />,
