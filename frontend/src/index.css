@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Space+Grotesk:wght@300..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", sans-serif;
+  --font-mono: "Space Mono", monospace;
+  --font-code: "DM Mono", monospace;
+
+  /* NULLBYTE pitch-black and industrial warm charcoal overrides */
+  --color-slate-950: #080808; /* Raw offline black */
+  --color-slate-900: #111111; /* Panel black */
+  --color-slate-855: rgba(255, 255, 255, 0.04);
+  --color-slate-850: rgba(255, 255, 255, 0.06); /* Razor boundary */
+  --color-slate-800: rgba(255, 255, 255, 0.06); /* Regular boundary */
+  --color-slate-700: rgba(255, 255, 255, 0.12); /* Strong boundary */
+  --color-slate-650: rgba(255, 255, 255, 0.2);
+  --color-slate-600: rgba(255, 255, 255, 0.25);
+  --color-slate-550: rgba(240, 237, 228, 0.25);
+  --color-slate-505: rgba(240, 237, 228, 0.25); /* Text muted */
+  --color-slate-500: rgba(240, 237, 228, 0.25); /* Text muted */
+  --color-slate-455: rgba(240, 237, 228, 0.5); /* Text secondary */
+  --color-slate-450: rgba(240, 237, 228, 0.5); /* Text secondary */
+  --color-slate-404: rgba(240, 237, 228, 0.5); /* Text secondary */
+  --color-slate-400: rgba(240, 237, 228, 0.5); /* Text secondary */
+  --color-slate-355: rgba(240, 237, 228, 0.75); /* Secondary text light */
+  --color-slate-350: rgba(240, 237, 228, 0.75); /* Secondary text light */
+  --color-slate-300: rgba(240, 237, 228, 0.75); /* Secondary text light */
+  --color-slate-205: rgba(240, 237, 228, 0.85);
+  --color-slate-200: rgba(240, 237, 228, 0.85);
+  --color-slate-105: #F0EDE4; /* Warm primary white */
+  --color-slate-100: #F0EDE4; /* Warm primary white */
+  --color-slate-50: #FFFFFF;  /* High-contrast highlight */
+
+  /* Vibrant NULLBYTE digital accent colors */
+  --color-cyber-cyan: #C8FF00;       /* Nullbyte Lime Yellow Primary */
+  --color-cyber-emerald: #00E5CC;    /* Vibrant Teal for Solved States */
+  --color-cyber-amber: #FFAA1D;      /* Warning Amber */
+  --color-cyber-crimson: #FF3D3D;    /* Vibrant Threat Red */
+  --color-cyber-violet: #8c76f9;     /* Deep intelligence violet */
+  
+  --animate-border-glow: border-glow 4s linear infinite;
+  --animate-scanline: scanline 8s linear infinite;
+  --animate-ticker-scroll: ticker-scroll 32s linear infinite;
+
+  @keyframes border-glow {
+    0%, 100% { border-color: rgba(200, 255, 0, 0.3); }
+    50% { border-color: rgba(0, 229, 204, 0.3); }
+  }
+
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+/* Custom globally useful utility presets for premium feels */
+.cyber-glow-cyan {
+  box-shadow: 0 0 15px rgba(200, 255, 0, 0.15);
+}
+
+.cyber-glow-emerald {
+  box-shadow: 0 0 15px rgba(0, 229, 204, 0.15);
+}
+
+.cyber-glow-crimson {
+  box-shadow: 0 0 15px rgba(255, 61, 61, 0.15);
+}
+
+.bg-dot-matrix {
+  background-image: radial-gradient(rgba(200, 255, 0, 0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+body {
+  background-color: #080808;
+  color: #F0EDE4;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Override scrollbar to match dark luxury vibes */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+::-webkit-scrollbar-thumb {
+  background: #161616;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #222222;
+}
