@@ -4,21 +4,41 @@ import { TerminalPanel } from "../components/ctf/TerminalPanel";
 import { Card } from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Button } from "../components/ui/Button";
+import { useOverviewStats } from "../features/stats/hooks";
+
+const categoryMetaMap: Record<string, { title: string; desc: string; marker: string }> = {
+  "Web": { title: "Web Exploitation", desc: "Audit JWT protocols, prototype corruption, and parameter injection.", marker: "WEB" },
+  "Reverse": { title: "Reverse Engineering", desc: "Analyze native binaries, trace assembly segments, and decode structures.", marker: "REV" },
+  "Crypto": { title: "Cryptography", desc: "Leak server keys, test symmetric constraints, and resolve entropy gaps.", marker: "CRYPTO" },
+  "Pwn": { title: "Pwn & Binary", desc: "Manipulate pointers, bypass system protections, and craft payloads.", marker: "PWN" },
+  "OSINT": { title: "OSINT Footprints", desc: "Map geo coordinates, harvest open index databases, and assemble files.", marker: "OSINT" },
+  "Forensics": { title: "Forensic Triage", desc: "Trace network capture files, parse RAM logs, and reconstruct magic bytes.", marker: "FORENSICS" },
+  "Steganography": { title: "Steganography", desc: "Identify pixel least-significant values and render audio spectrographs.", marker: "STEG" },
+  "Misc": { title: "Security General", desc: "Evaluate misconfigurations, logic controls, and simple script codes.", marker: "MISC" }
+};
 
 export function DashboardPage() {
-  const verifiedChallengesCount = 48;
-  const categoriesCount = 8;
+  const { data: statsRes } = useOverviewStats();
+  const stats = statsRes?.data;
 
-  const categories = [
-    { title: "Web Exploitation", desc: "Audit JWT protocols, prototype corruption, and parameter injection.", count: 12, marker: "WEB" },
-    { title: "Reverse Engineering", desc: "Analyze native binaries, trace assembly segments, and decode structures.", count: 8, marker: "REV" },
-    { title: "Cryptography", desc: "Leak server keys, test symmetric constraints, and resolve entropy gaps.", count: 9, marker: "CRYPTO" },
-    { title: "Pwn & Binary", desc: "Manipulate pointers, bypass system protections, and craft payloads.", count: 6, marker: "PWN" },
-    { title: "OSINT Footprints", desc: "Map geo coordinates, harvest open index databases, and assemble files.", count: 7, marker: "OSINT" },
-    { title: "Forensic Triage", desc: "Trace network capture files, parse RAM logs, and reconstruct magic bytes.", count: 8, marker: "FORENSICS" },
-    { title: "Steganography", desc: "Identify pixel least-significant values and render audio spectrographs.", count: 5, marker: "STEG" },
-    { title: "Security General", desc: "Evaluate misconfigurations, logic controls, and simple script codes.", count: 11, marker: "MISC" }
-  ];
+  const totalChallenges = stats?.total_challenges ?? 0;
+  const totalCategories = stats?.total_categories ?? 0;
+  const totalPlayers = stats?.total_players ?? 0;
+
+  // Build real category list dynamically from stats breakdown
+  const activeCategories = stats?.categories ? stats.categories.map((cat) => {
+    const meta = categoryMetaMap[cat.name] || { 
+      title: cat.name, 
+      desc: "Investigate and solve specialized security tasks in this domain.", 
+      marker: cat.name.substring(0, 3).toUpperCase() 
+    };
+    return {
+      title: meta.title,
+      desc: meta.desc,
+      count: cat.challenge_count,
+      marker: meta.marker
+    };
+  }) : [];
 
   return (
     <div className="space-y-24 text-left relative overflow-hidden select-text">
@@ -65,18 +85,18 @@ export function DashboardPage() {
           {/* Micro Stats Segment */}
           <div className="flex gap-12 pt-8 border-t border-slate-800/80">
             <div>
-              <span className="block font-mono text-2xl sm:text-3xl font-bold text-slate-150">{verifiedChallengesCount}</span>
+              <span className="block font-mono text-2xl sm:text-3xl font-bold text-slate-150">{totalChallenges}</span>
               <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">CHALLENGES</span>
             </div>
             <div className="w-[1px] bg-slate-800/60 my-2"></div>
             <div>
-              <span className="block font-mono text-2xl sm:text-3xl font-bold text-slate-150">{categoriesCount}</span>
+              <span className="block font-mono text-2xl sm:text-3xl font-bold text-slate-150">{totalCategories}</span>
               <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">CATEGORIES</span>
             </div>
             <div className="w-[1px] bg-slate-800/60 my-2"></div>
             <div>
-              <span className="block font-mono text-2xl sm:text-3xl font-bold text-cyber-cyan">LIVE</span>
-              <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">SCOREBOARD</span>
+              <span className="block font-mono text-2xl sm:text-3xl font-bold text-slate-150">{totalPlayers}</span>
+              <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">PLAYERS</span>
             </div>
           </div>
         </div>
@@ -102,28 +122,36 @@ export function DashboardPage() {
           }
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {categories.map((cat, idx) => (
-            <Link to="/challenges" key={idx} className="group">
-              <Card className="min-h-[160px] group">
-                <div className="flex items-start justify-between">
-                  <span className="font-mono text-[10px] tracking-wider text-slate-600 uppercase font-bold">#{cat.marker}-0{idx + 1}</span>
-                  <span className="font-mono text-[9px] text-cyber-cyan group-hover:text-slate-100 transition-colors uppercase tracking-widest bg-cyber-cyan/5 border border-cyber-cyan/15 px-2 py-0.5 font-bold">
-                    {cat.count} TASKS
-                  </span>
-                </div>
-                <div className="mt-4 text-left">
-                  <h3 className="font-display font-bold text-sm text-slate-100 tracking-wide uppercase">
-                    {cat.title}
-                  </h3>
-                  <p className="font-sans text-[11px] text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                    {cat.desc}
-                  </p>
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {activeCategories.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {activeCategories.map((cat, idx) => (
+              <Link to="/challenges" key={idx} className="group">
+                <Card className="min-h-[160px] group">
+                  <div className="flex items-start justify-between">
+                    <span className="font-mono text-[10px] tracking-wider text-slate-600 uppercase font-bold">#{cat.marker}-0{idx + 1}</span>
+                    <span className="font-mono text-[9px] text-cyber-cyan group-hover:text-slate-100 transition-colors uppercase tracking-widest bg-cyber-cyan/5 border border-cyber-cyan/15 px-2 py-0.5 font-bold">
+                      {cat.count} TASKS
+                    </span>
+                  </div>
+                  <div className="mt-4 text-left">
+                    <h3 className="font-display font-bold text-sm text-slate-100 tracking-wide uppercase">
+                      {cat.title}
+                    </h3>
+                    <p className="font-sans text-[11px] text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                      {cat.desc}
+                    </p>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 bg-[#0c0c0c] border border-white/[0.04] text-center select-none py-12">
+            <p className="font-mono text-[10px] text-slate-500 uppercase tracking-widest">
+              [!] NO ACTIVE CHALLENGE CATEGORIES AVAILABLE YET
+            </p>
+          </div>
+        )}
       </div>
 
       {/* ─── LAB PROGRESSION WORKFLOW ─── */}
