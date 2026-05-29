@@ -32,7 +32,7 @@ export function LoginPage() {
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);
       } else {
-        setError("Network connection failure. System operator tunnel offline.");
+        setError("Network connection failure. Unable to reach the server.");
       }
     } finally {
       setIsLoading(false);
@@ -67,7 +67,7 @@ export function LoginPage() {
           <Input
             label="Security Email Node"
             type="email"
-            placeholder="operator@nexus-ctf.org"
+            placeholder="operator@rblxsec.org"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -94,9 +94,9 @@ export function LoginPage() {
         </form>
 
         <div className="border-t border-white/[0.03] pt-4 text-center font-mono text-[10px] text-slate-500 uppercase tracking-wide">
-          New operator profile?{" "}
+          New to RBLXSec?{" "}
           <Link to="/register" className="text-cyber-cyan hover:text-white transition-colors font-bold ml-1">
-            Join CTF
+            Register
           </Link>
         </div>
       </div>

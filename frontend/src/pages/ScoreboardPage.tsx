@@ -56,7 +56,7 @@ export function ScoreboardPage() {
         <div className="flex gap-4 font-mono text-[10px] text-slate-550 uppercase tracking-widest bg-white/[0.01] border border-white/[0.04] p-3 select-none">
           <div className="flex items-center gap-1.5">
             <Users className="h-3.5 w-3.5 text-slate-500" />
-            <span>OPERATORS: {scoreboardList.length} active</span>
+            <span>PLAYERS: {scoreboardList.length} registered</span>
           </div>
           <span className="text-slate-800">|</span>
           <div className="flex items-center gap-1.5">

@@ -35,10 +35,10 @@ export function ProfilePage() {
             04 // COMPETITOR CONSOLE
           </div>
           <h1 className="font-display font-light text-3xl text-slate-50 tracking-tight uppercase leading-none">
-            OPERATOR PROFILE <span className="font-semibold text-slate-400">({user?.name || stats.username})</span>
+            PLAYER PROFILE <span className="font-semibold text-slate-400">({user?.name || stats.username})</span>
           </h1>
           <p className="font-sans text-slate-400 text-xs sm:text-sm mt-2 leading-relaxed">
-            Monitor real-time progress, unlocked achievement badges, and solve categories.
+            Monitor secure identity params, platform progression, and credentials. <span className="text-cyber-cyan font-mono text-[10px] uppercase font-bold tracking-wider select-none bg-cyber-cyan/5 border border-cyber-cyan/15 px-2 py-0.5 ml-1 inline-block">Demo Simulator Mode</span>
           </p>
         </div>
       </div>

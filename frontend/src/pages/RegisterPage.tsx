@@ -48,7 +48,7 @@ export function RegisterPage() {
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);
       } else {
-        setError("Network connection failure. System operator tunnel offline.");
+        setError("Network connection failure. Unable to reach the server.");
       }
     } finally {
       setIsLoading(false);
@@ -66,7 +66,7 @@ export function RegisterPage() {
             STAGE_AUTH / SIGNUP
           </div>
           <h1 className="font-display font-bold text-2xl text-slate-100 uppercase tracking-tight leading-none">
-            Join CTF Arena
+            Create Account
           </h1>
           <p className="font-sans text-slate-400 text-xs mt-2 leading-relaxed">
             Create your cryptographic competitor signature to register solves and climb the overall system leaderboard.
@@ -94,7 +94,7 @@ export function RegisterPage() {
           <Input
             label="Security Email Node"
             type="email"
-            placeholder="operator@nexus-ctf.org"
+            placeholder="operator@rblxsec.org"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

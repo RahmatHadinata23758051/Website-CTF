@@ -6,9 +6,8 @@ import { SectionHeader } from "../components/ui/SectionHeader";
 import { Button } from "../components/ui/Button";
 
 export function DashboardPage() {
-  const registeredUsers = 2847;
   const verifiedChallengesCount = 48;
-  const prizePool = "$12K";
+  const categoriesCount = 8;
 
   const categories = [
     { title: "Web Exploitation", desc: "Audit JWT protocols, prototype corruption, and parameter injection.", count: 12, marker: "WEB" },
@@ -33,27 +32,26 @@ export function DashboardPage() {
         <div className="space-y-8">
           <div className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-cyber-cyan font-bold select-none">
             <span className="w-6 h-[1px] bg-cyber-cyan inline-block"></span>
-            Season 04 // Live Now
+            CTF Lab // Online
           </div>
 
           <h1 className="font-display font-black text-5xl sm:text-7xl lg:text-8xl leading-[0.92] tracking-tighter text-slate-100 uppercase select-none">
             BREAK<br />
-            <span className="text-slate-650">EVERY</span><br />
+            <span className="text-slate-650">THE</span><br />
             <span className="text-cyber-cyan relative inline-block">
-              SYSTEM
+              LAB.
               <span className="animate-pulse ml-1 font-light">_</span>
             </span>
           </h1>
 
           <p className="font-sans text-slate-400 text-sm sm:text-base max-w-md leading-relaxed">
-            Elite capture-the-flag competition for security researchers, reverse engineers,
-            and exploit developers. 48 challenges across 8 distinct categories. Ready your setups.
+            A cybersecurity challenge lab for solving CTF tasks across web exploitation, cryptography, forensics, reverse engineering, OSINT, and binary exploitation. Submit flags. Climb the scoreboard.
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
             <Link to="/challenges">
               <Button variant="primary" className="flex items-center gap-2 py-3 px-6 select-none">
-                Enter Arena
+                Enter the Lab
                 <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
@@ -67,18 +65,18 @@ export function DashboardPage() {
           {/* Micro Stats Segment */}
           <div className="flex gap-12 pt-8 border-t border-slate-800/80">
             <div>
-              <span className="block font-mono text-2xl sm:text-3xl font-bold text-slate-150">{registeredUsers.toLocaleString()}</span>
-              <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">OPERATORS</span>
-            </div>
-            <div className="w-[1px] bg-slate-800/60 my-2"></div>
-            <div>
               <span className="block font-mono text-2xl sm:text-3xl font-bold text-slate-150">{verifiedChallengesCount}</span>
               <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">CHALLENGES</span>
             </div>
             <div className="w-[1px] bg-slate-800/60 my-2"></div>
             <div>
-              <span className="block font-mono text-2xl sm:text-3xl font-bold text-cyber-cyan">{prizePool}</span>
-              <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">PRIZE POOL</span>
+              <span className="block font-mono text-2xl sm:text-3xl font-bold text-slate-150">{categoriesCount}</span>
+              <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">CATEGORIES</span>
+            </div>
+            <div className="w-[1px] bg-slate-800/60 my-2"></div>
+            <div>
+              <span className="block font-mono text-2xl sm:text-3xl font-bold text-cyber-cyan">LIVE</span>
+              <span className="block font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-1 font-bold">SCOREBOARD</span>
             </div>
           </div>
         </div>
@@ -128,11 +126,11 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* ─── ARENA PROGRESSION WORKFLOW ─── */}
+      {/* ─── LAB PROGRESSION WORKFLOW ─── */}
       <div className="space-y-8">
         <SectionHeader
           index="03"
-          title="ARENA PROGRESSION WORKFLOW"
+          title="LAB PROGRESSION WORKFLOW"
           description="A straightforward process optimized to reduce distraction and make flag capturing simple."
         />
 
@@ -172,7 +170,7 @@ export function DashboardPage() {
               Enter Challenges
             </Button>
           </Link>
-          <Link to="/login">
+          <Link to="/register">
             <Button variant="secondary" className="w-full py-3.5 px-6">
               Create Account
             </Button>
