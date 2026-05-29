@@ -44,6 +44,7 @@ func InitDB(cfg *config.Config) *gorm.DB {
 		&models.Challenge{},
 		&models.Submission{},
 		&models.Solve{},
+		&models.Hint{},
 	)
 	if err != nil {
 		log.Fatalf("[DATABASE] Fatal: Migration failure: %v", err)

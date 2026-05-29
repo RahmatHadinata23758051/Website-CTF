@@ -6,6 +6,7 @@ import (
 	"ctf-platform/backend/internal/models"
 	"ctf-platform/backend/internal/utils"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -19,17 +20,29 @@ func Seed(db *gorm.DB, flagSalt string) {
 	// 2. Seed Challenges
 	seedChallenges(db, flagSalt)
 
+	// 3. Seed Hints
+	seedHints(db)
+
 	log.Println("[SEEDER] Seeding process completed.")
 }
 
 func seedUsers(db *gorm.DB) {
 	log.Println("[SEEDER] Checking users...")
 
+	// DEVELOPMENT-ONLY credentials — do not use in production
 	adminHash, _ := utils.HashPassword("admin123!")
 	competitorHash, _ := utils.HashPassword("user123!")
 
 	users := []models.User{
 		{
+			// Primary admin account for Phase 17 admin API testing
+			Name:         "Admin",
+			Email:        "admin@rblxsec.local",
+			PasswordHash: adminHash,
+			Role:         "admin",
+		},
+		{
+			// Legacy admin account — kept for backwards compatibility
 			Name:         "Admin Operator",
 			Email:        "admin@ctf.com",
 			PasswordHash: adminHash,
@@ -133,6 +146,60 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			existing.ExternalLink = ch.ExternalLink
 			db.Save(&existing)
 			log.Printf("[SEEDER] Updated existing challenge %s with standard CTF flag hashes\n", ch.Title)
+		}
+	}
+}
+
+func seedHints(db *gorm.DB) {
+	log.Println("[SEEDER] Checking challenge hints...")
+
+	// Find the challenges and map their slugs to IDs
+	var challenges []models.Challenge
+	db.Find(&challenges)
+	slugToID := make(map[string]uuid.UUID)
+	for _, c := range challenges {
+		slugToID[c.Slug] = c.ID
+	}
+
+	// Dynamic Seed Hints templates
+	hints := []struct {
+		slug       string
+		content    string
+		cost       int
+		orderIndex int
+	}{
+		// Web Cookie Monster hints
+		{"web-cookie-monster", "Check browser storage before checking source code.", 0, 1},
+		{"web-cookie-monster", "Cookies can hold more than session IDs.", 0, 2},
+		// RSA Basics hints
+		{"rsa-basics", "Small RSA parameters are often meant to be factored.", 0, 1},
+		{"rsa-basics", "Look carefully at n and e.", 0, 2},
+		// EXIF Detective hints
+		{"exif-detective", "Metadata can reveal more than the image itself.", 0, 1},
+	}
+
+	for _, h := range hints {
+		challengeID, ok := slugToID[h.slug]
+		if !ok {
+			continue
+		}
+
+		// Ensure we don't duplicate seed hints
+		var count int64
+		db.Model(&models.Hint{}).Where("challenge_id = ? AND content = ?", challengeID, h.content).Count(&count)
+		if count == 0 {
+			hint := models.Hint{
+				ChallengeID: challengeID,
+				Content:     h.content,
+				Cost:        h.cost,
+				OrderIndex:  h.orderIndex,
+				IsActive:    true,
+			}
+			if err := db.Create(&hint).Error; err != nil {
+				log.Printf("[SEEDER] Warning: Failed to seed hint for %s: %v\n", h.slug, err)
+			} else {
+				log.Printf("[SEEDER] Created hint for %s (order: %d)\n", h.slug, h.orderIndex)
+			}
 		}
 	}
 }

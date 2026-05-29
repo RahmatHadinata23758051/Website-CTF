@@ -57,6 +57,9 @@ func main() {
 		AllowCredentials: true,
 	}))
 
+	// Serve challenge static uploads locally
+	app.Static("/uploads/challenges", "./storage/uploads/challenges")
+
 	// 4. Define Route Groups
 	api := app.Group("/api")
 
@@ -74,6 +77,12 @@ func main() {
 
 	// Scoreboard Endpoint Routes
 	routes.SetupScoreboardRoutes(api)
+
+	// Hint Endpoint Routes
+	routes.SetupHintRoutes(api, cfg)
+
+	// Admin Endpoint Routes (admin-only, JWT + role guard applied inside)
+	routes.SetupAdminRoutes(api, cfg)
 
 	// 5. Start Server
 	log.Printf("[SERVER] Starting backend on port %s in %s mode...\n", cfg.Port, cfg.AppEnv)
