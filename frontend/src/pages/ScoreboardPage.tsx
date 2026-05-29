@@ -5,6 +5,7 @@ import { ScoreboardTable } from "../components/ctf/ScoreboardTable";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { Alert } from "../components/ui/Alert";
 import { EmptyState } from "../components/ui/EmptyState";
+import { LeaderboardProgressionChart } from "../components/ctf/LeaderboardProgressionChart";
 import type { ScoreboardUser } from "../features/scoreboard/types";
 
 export function ScoreboardPage() {
@@ -101,6 +102,9 @@ export function ScoreboardPage() {
               <PodiumCard key={player.user_id} player={player} />
             ))}
           </div>
+
+          {/* PROGRESSION CHART */}
+          <LeaderboardProgressionChart />
 
           {/* LOWER RANKS STANDINGS TABLE */}
           {remainingList.length > 0 && (
