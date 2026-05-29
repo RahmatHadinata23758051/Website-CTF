@@ -91,6 +91,14 @@ export function Navbar() {
               Profile
             </div>
           </Link>
+          {isAuthenticated && user?.role === "admin" && (
+            <Link to="/admin/challenges" className={navItemClass("/admin/challenges")}>
+              <div className="flex items-center gap-1.5 text-cyber-violet">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Admin
+              </div>
+            </Link>
+          )}
         </nav>
 
         {/* User Stats / Action Area */}
@@ -187,6 +195,17 @@ export function Navbar() {
           >
             Profile
           </Link>
+          {isAuthenticated && user?.role === "admin" && (
+            <Link
+              to="/admin/challenges"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${
+                isActive("/admin/challenges") ? "bg-slate-900 text-cyber-violet font-bold" : "text-cyber-violet/85"
+              }`}
+            >
+              Admin Panel
+            </Link>
+          )}
         </div>
       )}
     </header>

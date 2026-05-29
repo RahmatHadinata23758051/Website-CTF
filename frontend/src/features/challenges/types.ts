@@ -58,3 +58,48 @@ export interface FlagSubmitResponse {
     already_solved: boolean;
   } | null;
 }
+
+export interface AdminChallenge {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  category: string;
+  difficulty: string;
+  points: number;
+  attachment_url: string | null;
+  external_link: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminChallengeListResponse {
+  success: boolean;
+  message: string;
+  data: {
+    challenges: AdminChallenge[];
+  } | null;
+}
+
+export interface AdminChallengeResponse {
+  success: boolean;
+  message: string;
+  data: {
+    challenge: AdminChallenge;
+  } | null;
+}
+
+export interface AdminChallengeRequest {
+  title: string;
+  slug?: string;
+  description: string;
+  category: string;
+  difficulty: string;
+  points: number;
+  flag?: string; // Plaintext flag (optional on update, required on create)
+  attachment_url: string | null;
+  external_link: string | null;
+  is_active: boolean;
+}
+

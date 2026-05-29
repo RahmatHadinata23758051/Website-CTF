@@ -7,6 +7,7 @@ import { ChallengesPage } from "../pages/ChallengesPage";
 import { ChallengeDetailPage } from "../pages/ChallengeDetailPage";
 import { ScoreboardPage } from "../pages/ScoreboardPage";
 import { ProfilePage } from "../pages/ProfilePage";
+import { AdminChallengesPage } from "../pages/AdminChallengesPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
@@ -44,6 +45,15 @@ export const router = createBrowserRouter([
           {
             path: "profile",
             element: <ProfilePage />,
+          },
+        ],
+      },
+      {
+        element: <ProtectedRoute allowedRoles={["admin"]} />,
+        children: [
+          {
+            path: "admin/challenges",
+            element: <AdminChallengesPage />,
           },
         ],
       },
