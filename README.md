@@ -53,20 +53,61 @@ ctf-platform/
 
 ## Development Environment Setup
 
-Follow these steps to configure and boot the development servers locally:
+You can run the RBLXSec platform using either a fully containerized Docker Compose environment or a direct manual installation.
 
-### Prerequisites
+### Option A: Containerized Setup (Recommended)
 
+Docker Compose automates the instantiation of the entire RBLXSec stack (React frontend, Go Fiber API, PostgreSQL database, and Redis cache server) with automated health checks, persistent storage volumes, and seamless networking.
+
+#### Prerequisites
+- **Docker** (v20 or higher) and **Docker Compose** (v2 or higher) installed on your workstation.
+
+#### Running the Full Stack
+To build, configure, and boot the entire stack in one command from the project root:
+```bash
+docker compose up --build
+```
+
+This command will automatically:
+1. Initialize the PostgreSQL database container (`rblxsec_postgres`) with auto-migrations.
+2. Initialize the Redis cache container (`rblxsec_redis`) for scoreboard caching and rate-limiting.
+3. Compile and boot the Go Fiber REST API (`rblxsec_backend`) once dependencies are healthy.
+4. Install npm packages and launch the Vite React dev server (`rblxsec_frontend`).
+
+#### Verification & Live Portals
+* **Frontend Portal:** [http://localhost:5173](http://localhost:5173)
+* **Backend API Health Check:** [http://localhost:8080/api/health](http://localhost:8080/api/health)
+* **PostgreSQL Port:** `5432` (Exposed to host)
+* **Redis Port:** `6379` (Exposed to host)
+
+#### Stopping Services
+To stop and shut down all container services gracefully:
+```bash
+docker compose down
+```
+
+#### Resetting Local Database & Seed Data
+To clear the persistent PostgreSQL GORM database volume and re-run all GORM schema auto-migrations and test seeders from scratch:
+```bash
+docker compose down -v
+docker compose up --build
+```
+> [!WARNING]
+> Running `docker compose down -v` permanently deletes the persistent local PostgreSQL docker volume, clearing all current solved records and registered user records.
+
+---
+
+### Option B: Local Manual Setup (Alternative)
+
+#### Prerequisites
 Ensure you have the following dependencies installed on your workstation:
 - Go (v1.20 or higher)
 - Node.js (v18 or higher)
 - PostgreSQL (running locally on port 5432)
 - Redis Server (running locally on port 6379)
 
-### Environment Variables
-
+#### Environment Variables
 Configure a `.env` file in the `backend/` directory using the reference template:
-
 ```env
 PORT=8080
 APP_ENV=development
@@ -83,16 +124,14 @@ JWT_SECRET=supersecretjwtkeythatisextremelylong123!
 FLAG_SALT=ctfsaltsupersecretkey123!
 ```
 
-### Running the API Server
-
+#### Running the API Server
 ```bash
 cd backend
 go mod tidy
 go run ./cmd/server
 ```
 
-### Running the Frontend UI
-
+#### Running the Frontend UI
 ```bash
 cd frontend
 npm install

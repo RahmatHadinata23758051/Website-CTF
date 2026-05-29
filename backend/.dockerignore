@@ -1,0 +1,20 @@
+# Version control
+.git
+.gitignore
+
+# Local configuration overrides
+.env
+.env.local
+
+# Temp and execution logs
+.idea
+.vscode
+*.log
+*.exe
+
+# Compiled binaries and local build caches
+server
+backend
+build/
+bin/
+tmp/

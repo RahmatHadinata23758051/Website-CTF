@@ -67,7 +67,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "Web",
 			Difficulty:    "Easy",
 			Points:        100,
-			FlagHash:      utils.HashFlag("CTF{cookie_monster_found}", flagSalt),
+			FlagHash:      utils.HashFlag("iet{cookie_monster_found}", flagSalt),
 			IsActive:      true,
 			ExternalLink:  "http://localhost:8080/api/health",
 		},
@@ -78,7 +78,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "Crypto",
 			Difficulty:    "Easy",
 			Points:        150,
-			FlagHash:      utils.HashFlag("CTF{rsa_basics_solved}", flagSalt),
+			FlagHash:      utils.HashFlag("iet{rsa_basics_solved}", flagSalt),
 			IsActive:      true,
 		},
 		{
@@ -88,7 +88,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "Pwn",
 			Difficulty:    "Medium",
 			Points:        300,
-			FlagHash:      utils.HashFlag("CTF{buffer_overflow_beginner}", flagSalt),
+			FlagHash:      utils.HashFlag("iet{buffer_overflow_beginner}", flagSalt),
 			IsActive:      true,
 		},
 		{
@@ -98,7 +98,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "Reverse",
 			Difficulty:    "Hard",
 			Points:        500,
-			FlagHash:      utils.HashFlag("CTF{secure_vault_reversed}", flagSalt),
+			FlagHash:      utils.HashFlag("iet{secure_vault_reversed}", flagSalt),
 			IsActive:      true,
 		},
 		{
@@ -108,7 +108,7 @@ func seedChallenges(db *gorm.DB, flagSalt string) {
 			Category:      "OSINT",
 			Difficulty:    "Easy",
 			Points:        100,
-			FlagHash:      utils.HashFlag("CTF{exif_detective_found}", flagSalt),
+			FlagHash:      utils.HashFlag("iet{exif_detective_found}", flagSalt),
 			IsActive:      true,
 		},
 	}

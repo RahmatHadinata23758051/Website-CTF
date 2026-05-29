@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # ==============================================================================
+  # Database Service (PostgreSQL)
+  # ==============================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: rblxsec_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: rblxsec
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rblxsec"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ==============================================================================
+  # Caching & Rate Limiting Service (Redis)
+  # ==============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: rblxsec_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ==============================================================================
+  # Backend API Service (Go Fiber)
+  # ==============================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rblxsec_backend
+    restart: always
+    environment:
+      APP_ENV: development
+      PORT: 8080
+      JWT_SECRET: change_this_development_secret
+      FLAG_SALT: ctfsaltvaluechangeinproduction456!
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: rblxsec
+      DB_SSLMODE: disable
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ==============================================================================
+  # Frontend Client Service (Vite React)
+  # ==============================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rblxsec_frontend
+    restart: always
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+# ==============================================================================
+# Persistent Volumes Definition
+# ==============================================================================
+volumes:
+  postgres_data:
+    driver: local
