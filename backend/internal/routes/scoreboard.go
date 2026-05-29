@@ -12,4 +12,5 @@ func SetupScoreboardRoutes(router fiber.Router) {
 
 	// Public access - anyone can browse rankings
 	router.Get("/scoreboard", handler.GetScoreboard)
+	router.Get("/scoreboard/progression", handler.GetScoreboardProgression)
 }

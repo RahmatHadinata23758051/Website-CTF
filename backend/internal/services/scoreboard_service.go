@@ -81,3 +81,67 @@ func (s *ScoreboardService) GetScoreboard() ([]ScoreboardRowDTO, error) {
 
 	return dtoList, nil
 }
+
+// SolveSeriesPoint holds a cumulative scoreboard point value at a specific timestamp.
+type SolveSeriesPoint struct {
+	Timestamp time.Time `json:"timestamp"`
+	Points    int       `json:"points"`
+}
+
+// PlayerProgressionDTO represents the cumulative score progression profile over time for a player.
+type PlayerProgressionDTO struct {
+	UserID      uuid.UUID          `json:"user_id"`
+	Name        string             `json:"name"`
+	Rank        int                `json:"rank"`
+	TotalPoints int64              `json:"total_points"`
+	TotalSolves int64              `json:"total_solves"`
+	Series      []SolveSeriesPoint `json:"series"`
+}
+
+// GetScoreboardProgression calculates the progressive solves points progression over time for the Top 10 players.
+func (s *ScoreboardService) GetScoreboardProgression() ([]PlayerProgressionDTO, error) {
+	// 1. Fetch current scoreboard (uses cache or direct pg calculate)
+	board, err := s.GetScoreboard()
+	if err != nil {
+		return nil, err
+	}
+
+	// Slice Top 10 players
+	limit := len(board)
+	if limit > 10 {
+		limit = 10
+	}
+	topPlayers := board[:limit]
+
+	progressions := make([]PlayerProgressionDTO, 0, len(topPlayers))
+
+	for _, p := range topPlayers {
+		// 2. Fetch raw solves timeline
+		timeline, err := s.repo.GetUserSolvesTimeline(p.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		series := make([]SolveSeriesPoint, 0, len(timeline))
+		cumulativePoints := 0
+
+		for _, row := range timeline {
+			cumulativePoints += row.Points
+			series = append(series, SolveSeriesPoint{
+				Timestamp: row.SolvedAt,
+				Points:    cumulativePoints,
+			})
+		}
+
+		progressions = append(progressions, PlayerProgressionDTO{
+			UserID:      p.UserID,
+			Name:        p.Name,
+			Rank:        p.Rank,
+			TotalPoints: p.TotalPoints,
+			TotalSolves: p.TotalSolves,
+			Series:      series,
+		})
+	}
+
+	return progressions, nil
+}

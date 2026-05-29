@@ -31,3 +31,15 @@ func (h *ScoreboardHandler) GetScoreboard(c *fiber.Ctx) error {
 		"scoreboard": scoreboard,
 	})
 }
+
+// GetScoreboardProgression handles GET /api/scoreboard/progression
+func (h *ScoreboardHandler) GetScoreboardProgression(c *fiber.Ctx) error {
+	progressions, err := h.service.GetScoreboardProgression()
+	if err != nil {
+		return utils.SendError(c, "Failed to retrieve scoreboard progression series", fiber.StatusInternalServerError)
+	}
+
+	return utils.SendSuccess(c, "Scoreboard progression retrieved successfully", fiber.Map{
+		"players": progressions,
+	})
+}

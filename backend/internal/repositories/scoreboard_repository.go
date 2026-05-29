@@ -46,3 +46,25 @@ func (r *ScoreboardRepository) CalculateScoreboard() ([]ScoreboardRowRaw, error)
 
 	return rows, err
 }
+
+// UserSolveTimelineRow represents a raw solve timestamp and corresponding points.
+type UserSolveTimelineRow struct {
+	Points   int       `gorm:"column:points"`
+	SolvedAt time.Time `gorm:"column:solved_at"`
+}
+
+// GetUserSolvesTimeline retrieves all solved challenges and points for a given user,
+// ordered by solve timestamp ascending.
+func (r *ScoreboardRepository) GetUserSolvesTimeline(userID uuid.UUID) ([]UserSolveTimelineRow, error) {
+	db := database.DB
+	var rows []UserSolveTimelineRow
+
+	err := db.Table("solves").
+		Select("challenges.points, solves.solved_at").
+		Joins("JOIN challenges ON challenges.id = solves.challenge_id AND challenges.deleted_at IS NULL").
+		Where("solves.user_id = ? AND challenges.is_active = ?", userID, true).
+		Order("solves.solved_at ASC").
+		Scan(&rows).Error
+
+	return rows, err
+}
