@@ -13,9 +13,26 @@ import { CategoryBadge } from "../components/ctf/CategoryBadge";
 import { DifficultyBadge } from "../components/ctf/DifficultyBadge";
 import { ChallengeMeta } from "../components/ctf/ChallengeMeta";
 import { FlagSubmitBox } from "../components/ctf/FlagSubmitBox";
+import { HintPanel } from "../components/ctf/HintPanel";
 import { useChallengeDetail } from "../features/challenges/hooks";
 import { mapBackendCategoryToUI } from "../features/challenges/api";
 import type { Category } from "../types";
+
+function getFullAttachmentUrl(attachmentUrl: string | null): string {
+  if (!attachmentUrl) return "";
+  if (attachmentUrl.startsWith("http://") || attachmentUrl.startsWith("https://")) {
+    return attachmentUrl;
+  }
+  const apiBaseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
+  const backendOrigin = apiBaseUrl.replace(/\/api\/?$/, "");
+  return `${backendOrigin}${attachmentUrl}`;
+}
+
+function getFilenameFromUrl(url: string): string {
+  if (!url) return "";
+  const parts = url.split("/");
+  return parts[parts.length - 1];
+}
 
 export function ChallengeDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -109,7 +126,7 @@ export function ChallengeDetailPage() {
 
   const copyShellCommand = () => {
     if (!challenge.attachment_url) return;
-    navigator.clipboard.writeText(`curl -O ${challenge.attachment_url}`);
+    navigator.clipboard.writeText(`curl -O ${getFullAttachmentUrl(challenge.attachment_url)}`);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 2500);
   };
@@ -181,17 +198,23 @@ export function ChallengeDetailPage() {
                 {challenge.attachment_url ? (
                   <>
                     <div className="flex items-start justify-between">
-                      <h4 className="font-mono font-bold text-xs text-slate-100 truncate pr-4">PAYLOAD_PACKET.ZIP</h4>
+                      <h4 className="font-mono font-bold text-xs text-slate-100 truncate pr-4">
+                        {getFilenameFromUrl(challenge.attachment_url).toUpperCase()}
+                      </h4>
                       <a 
-                        href={challenge.attachment_url}
+                        href={getFullAttachmentUrl(challenge.attachment_url)}
                         download
+                        target="_blank"
+                        rel="noreferrer"
                         className="p-2 bg-[#121212] border border-white/[0.04] hover:border-cyber-cyan hover:text-cyber-cyan text-slate-400 transition-all flex items-center justify-center shrink-0 cursor-pointer"
-                        title="Download Payload Packet"
+                        title="Download Challenge Attachment"
                       >
                         <Download className="h-3.5 w-3.5" />
                       </a>
                     </div>
-                    <code className="font-mono text-[9px] text-slate-655 block truncate select-none">SHA256: 4ec822bfb8d5a7114e910bdc0</code>
+                    <code className="font-mono text-[8px] text-slate-550 block truncate select-none">
+                      URL: {challenge.attachment_url}
+                    </code>
                   </>
                 ) : (
                   <p className="font-mono text-[11px] text-slate-500 italic pt-1">
@@ -202,7 +225,9 @@ export function ChallengeDetailPage() {
 
               {challenge.attachment_url && (
                 <div className="mt-4 pt-3 border-t border-white/[0.03] flex items-center justify-between select-none">
-                  <span className="font-mono text-[9px] text-slate-600 truncate max-w-[70%]">curl -O {challenge.attachment_url}</span>
+                  <span className="font-mono text-[9px] text-slate-600 truncate max-w-[70%]">
+                    curl -O {getFullAttachmentUrl(challenge.attachment_url)}
+                  </span>
                   <button 
                     onClick={copyShellCommand}
                     className="font-mono text-[9px] text-cyber-cyan hover:text-slate-100 transition-colors flex items-center gap-1 cursor-pointer font-bold uppercase tracking-wider"
@@ -245,6 +270,9 @@ export function ChallengeDetailPage() {
               )}
             </div>
           </div>
+
+          {/* Mount real challenge hints panel */}
+          <HintPanel slug={challenge.slug} />
 
           {/* Mount real Flag Validator submit box */}
           <FlagSubmitBox slug={challenge.slug} isSolved={challenge.is_solved} />
