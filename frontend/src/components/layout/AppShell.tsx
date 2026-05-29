@@ -2,10 +2,14 @@ import { Outlet } from "react-router-dom";
 import { Navbar } from "./Navbar";
 import { LiveTicker } from "./LiveTicker";
 import { Footer } from "./Footer";
+import { CursorSpotlightBackground } from "./CursorSpotlightBackground";
 
 export function AppShell() {
   return (
     <div className="min-h-screen bg-background text-slate-100 flex flex-col font-sans relative antialiased selection:bg-cyber-cyan/20 select-text">
+      {/* Interactive Cursor Spotlight Background */}
+      <CursorSpotlightBackground />
+
       {/* Dynamic matrix background texture */}
       <div className="absolute inset-0 bg-dot-matrix pointer-events-none opacity-50 z-0"></div>
 
