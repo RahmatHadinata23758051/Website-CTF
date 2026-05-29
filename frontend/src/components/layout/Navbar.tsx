@@ -32,11 +32,10 @@ export function Navbar() {
   };
 
   const navItemClass = (path: string) => {
-    return `px-4 py-2 font-display text-xs sm:text-sm font-medium transition-all duration-200 border-b-2 hover:text-slate-50 uppercase tracking-wider ${
-      isActive(path)
-        ? "border-cyber-cyan text-slate-50 bg-cyber-cyan/5 font-semibold"
-        : "border-transparent text-slate-500 hover:border-slate-800"
-    }`;
+    return `px-4 py-2 font-display text-xs sm:text-sm font-medium transition-all duration-200 border-b-2 hover:text-slate-50 uppercase tracking-wider ${isActive(path)
+      ? "border-cyber-cyan text-slate-50 bg-cyber-cyan/5 font-semibold"
+      : "border-transparent text-slate-500 hover:border-slate-800"
+      }`;
   };
 
   return (
@@ -49,7 +48,7 @@ export function Navbar() {
           </span>
           <span className="font-mono text-slate-500 tracking-widest uppercase">LAB ONLINE // SESSION ACTIVE</span>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <div className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800 font-mono text-[9px] text-slate-400 flex items-center gap-1">
             <ShieldCheck className="h-3 w-3 text-cyber-violet" />
@@ -103,10 +102,6 @@ export function Navbar() {
 
         {/* User Stats / Action Area */}
         <div className="flex items-center gap-3">
-          <div className="hidden lg:flex items-center gap-2 font-mono text-[9px] text-cyber-emerald bg-cyber-emerald/5 border border-cyber-emerald/20 px-2.5 py-1 uppercase tracking-wider rounded-sm mr-1 select-none font-bold">
-            <span className="w-1.5 h-1.5 bg-cyber-emerald rounded-full animate-ping"></span>
-            SYS LIVE
-          </div>
 
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
@@ -162,36 +157,32 @@ export function Navbar() {
           <Link
             to="/"
             onClick={() => setMobileMenuOpen(false)}
-            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${
-              isActive("/") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
-            }`}
+            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+              }`}
           >
             Overview
           </Link>
           <Link
             to="/challenges"
             onClick={() => setMobileMenuOpen(false)}
-            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${
-              isActive("/challenges") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
-            }`}
+            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/challenges") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+              }`}
           >
             Challenges
           </Link>
           <Link
             to="/scoreboard"
             onClick={() => setMobileMenuOpen(false)}
-            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${
-              isActive("/scoreboard") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
-            }`}
+            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/scoreboard") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+              }`}
           >
             Scoreboard
           </Link>
           <Link
             to="/profile"
             onClick={() => setMobileMenuOpen(false)}
-            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${
-              isActive("/profile") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
-            }`}
+            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/profile") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+              }`}
           >
             Profile
           </Link>
@@ -199,9 +190,8 @@ export function Navbar() {
             <Link
               to="/admin/challenges"
               onClick={() => setMobileMenuOpen(false)}
-              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${
-                isActive("/admin/challenges") ? "bg-slate-900 text-cyber-violet font-bold" : "text-cyber-violet/85"
-              }`}
+              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/admin/challenges") ? "bg-slate-900 text-cyber-violet font-bold" : "text-cyber-violet/85"
+                }`}
             >
               Admin Panel
             </Link>
