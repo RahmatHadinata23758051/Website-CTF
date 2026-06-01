@@ -42,11 +42,9 @@ export function ChallengeDetailPage() {
 
   const challenge = data?.data?.challenge;
 
-  const [hintRevealed, setHintRevealed] = React.useState(false);
   const [copiedCode, setCopiedCode] = React.useState(false);
 
   React.useEffect(() => {
-    setHintRevealed(false);
     setCopiedCode(false);
   }, [slug]);
 
@@ -97,32 +95,6 @@ export function ChallengeDetailPage() {
 
   // Dynamic values
   const uiCategory = mapBackendCategoryToUI(challenge.category) as Category;
-
-  // Generate mock tags/hints dynamically to preserve visual aesthetics in GORM absence
-  const getDynamicTags = (cat: string) => {
-    switch (cat) {
-      case "Web": return ["HTTP-COOKIES", "SESSION-STORAGE", "WEB-RECON"];
-      case "Crypto": return ["RSA-CIPHER", "ASYMMETRIC-MATH", "DECRYPTION"];
-      case "Pwn": return ["STACK-OVERFLOW", "RET2WIN", "X86-EXPLOIT"];
-      case "Reverse": return ["LICENSE-CHECK", "BINARY-PATCH", "ASSEMBLY"];
-      case "OSINT": return ["EXIF-METADATA", "GPS-GEOLOCATION", "IMG-FORENSICS"];
-      default: return ["VECTOR-RECON", "HEX-SIGNATURE", "SYS-REVERT"];
-    }
-  };
-
-  const getDynamicHint = (cat: string) => {
-    switch (cat) {
-      case "Web": return "Check browser cookie parameters utilizing Developer Tools (F12) under Application storage.";
-      case "Crypto": return "Use the standard RSA formula where decryption exponent d = e^-1 mod ((p-1)*(q-1)) to decrypt.";
-      case "Pwn": return "Look closely at the memory buffer boundaries. Rewriting local parameters allows overriding command jumps.";
-      case "Reverse": return "Bypass logic checks inside instructions or check static hex values inside assembly loops.";
-      case "OSINT": return "Try utilizing command line utilities like exiftool or check gps data coordinates in online maps.";
-      default: return "Examine hexadecimal blocks or search file structures for secret markers.";
-    }
-  };
-
-  const tags = getDynamicTags(challenge.category);
-  const hint = getDynamicHint(challenge.category);
 
   const copyShellCommand = () => {
     if (!challenge.attachment_url) return;
@@ -302,46 +274,6 @@ export function ChallengeDetailPage() {
             </div>
           </div>
 
-          {/* ACTIVE HINTS */}
-          <div className="p-5 bg-card-bg border border-border-ui space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-border-subtle">
-              <h4 className="font-mono font-bold text-[10px] text-fg-muted tracking-[0.2em] uppercase">03 // RADAR HINT</h4>
-              <span className="font-mono text-[9px] text-cyber-amber px-1.5 py-0.2 bg-cyber-amber/5 border border-cyber-amber/15 tracking-widest font-bold">0 COST</span>
-            </div>
-
-            <div className="space-y-3">
-              <p className="font-sans text-[11px] text-fg-subtle leading-relaxed pt-1">
-                Decrypt staging hints mapping vector specifications.
-              </p>
-
-              {hintRevealed ? (
-                <div className="p-3 bg-bg border border-border-subtle font-mono text-xs text-cyber-amber animate-fade-in text-left">
-                  <p className="text-[9px] text-fg-subtle mb-1 uppercase tracking-widest font-bold">DECRYPTED STATEMENT:</p>
-                  <p className="text-fg-muted text-[11px] leading-relaxed font-sans">{hint}</p>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setHintRevealed(true)}
-                  className="w-full py-2 bg-bg hover:bg-surface text-fg-muted border border-border-ui font-mono text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                >
-                  Decrypt Vector Hint
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* DISCOVERY TAGS */}
-          <div className="p-5 bg-card-bg border border-border-ui space-y-3">
-            <h4 className="font-mono font-bold text-[10px] text-fg-muted tracking-[0.2em] uppercase">04 // DISCOVERY TAGS</h4>
-            
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {tags.map((tag, idx) => (
-                <span key={idx} className="font-mono text-[9px] text-fg-muted bg-bg border border-border-subtle px-2 py-0.5 uppercase tracking-wider">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
 
         </div>
 
