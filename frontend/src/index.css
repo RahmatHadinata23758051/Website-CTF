@@ -1,101 +1,347 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Space+Grotesk:wght@300..700&display=swap');
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS — Dark Mode Default
+   ═══════════════════════════════════════════════ */
+:root {
+  /* Backgrounds */
+  --bg:         #080808;
+  --bg-surface: #0d0d0d;
+  --bg-elevated:#111111;
+  --bg-card:    #0c0c0c;
+  --bg-input:   #080808;
+
+  /* Foreground / Text */
+  --fg:         #F0EDE4;
+  --fg-muted:   rgba(240,237,228,0.6);
+  --fg-subtle:  rgba(240,237,228,0.35);
+
+  /* Borders */
+  --border:       rgba(255,255,255,0.06);
+  --border-strong:rgba(255,255,255,0.12);
+  --border-subtle:rgba(255,255,255,0.04);
+
+  /* Scrollbar */
+  --scrollbar-track: #080808;
+  --scrollbar-thumb: #1c1c1c;
+  --scrollbar-hover:  #2a2a2a;
+
+  /* Dot matrix pattern */
+  --dot-matrix-color: rgba(200,255,0,0.025);
+
+  /* Ticker / Navbar strip */
+  --ticker-bg: #111111;
+  --navbar-bg: rgba(8,8,8,0.8);
+  --footer-bg: #0c0c0c;
+}
+
+/* ═══════════════════════════════════════════════
+   LIGHT MODE TOKEN OVERRIDES
+   ═══════════════════════════════════════════════ */
+html.light {
+  /* Backgrounds */
+  --bg:         #f2f1ed;
+  --bg-surface: #ffffff;
+  --bg-elevated:#f9f8f5;
+  --bg-card:    #fafaf7;
+  --bg-input:   #ffffff;
+
+  /* Foreground / Text */
+  --fg:         #111111;
+  --fg-muted:   #4a4a4a;
+  --fg-subtle:  #777777;
+
+  /* Borders */
+  --border:       rgba(0,0,0,0.09);
+  --border-strong:rgba(0,0,0,0.16);
+  --border-subtle:rgba(0,0,0,0.06);
+
+  /* Scrollbar */
+  --scrollbar-track: #e8e8e0;
+  --scrollbar-thumb: #c4c4b8;
+  --scrollbar-hover:  #a8a8a0;
+
+  /* Dot matrix pattern — very subtle warm dots on light */
+  --dot-matrix-color: rgba(0,0,0,0.03);
+
+  /* Ticker / Navbar strip */
+  --ticker-bg: #e8e8e0;
+  --navbar-bg: rgba(242,241,237,0.9);
+  --footer-bg: #e8e8e0;
+}
+
+/* ═══════════════════════════════════════════════
+   TAILWIND v4 THEME EXTENSION
+   ═══════════════════════════════════════════════ */
 @theme {
   --font-sans: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Syne", sans-serif;
   --font-mono: "Space Mono", monospace;
   --font-code: "DM Mono", monospace;
 
-  /* NULLBYTE pitch-black and industrial warm charcoal overrides */
-  --color-slate-950: #080808; /* Raw offline black */
-  --color-slate-900: #111111; /* Panel black */
-  --color-slate-855: rgba(255, 255, 255, 0.04);
-  --color-slate-850: rgba(255, 255, 255, 0.06); /* Razor boundary */
-  --color-slate-800: rgba(255, 255, 255, 0.06); /* Regular boundary */
-  --color-slate-700: rgba(255, 255, 255, 0.12); /* Strong boundary */
-  --color-slate-650: rgba(255, 255, 255, 0.2);
-  --color-slate-600: rgba(255, 255, 255, 0.25);
-  --color-slate-550: rgba(240, 237, 228, 0.25);
-  --color-slate-505: rgba(240, 237, 228, 0.25); /* Text muted */
-  --color-slate-500: rgba(240, 237, 228, 0.25); /* Text muted */
-  --color-slate-455: rgba(240, 237, 228, 0.5); /* Text secondary */
-  --color-slate-450: rgba(240, 237, 228, 0.5); /* Text secondary */
-  --color-slate-404: rgba(240, 237, 228, 0.5); /* Text secondary */
-  --color-slate-400: rgba(240, 237, 228, 0.5); /* Text secondary */
-  --color-slate-355: rgba(240, 237, 228, 0.75); /* Secondary text light */
-  --color-slate-350: rgba(240, 237, 228, 0.75); /* Secondary text light */
-  --color-slate-300: rgba(240, 237, 228, 0.75); /* Secondary text light */
-  --color-slate-205: rgba(240, 237, 228, 0.85);
-  --color-slate-200: rgba(240, 237, 228, 0.85);
-  --color-slate-105: #F0EDE4; /* Warm primary white */
-  --color-slate-100: #F0EDE4; /* Warm primary white */
-  --color-slate-50: #FFFFFF;  /* High-contrast highlight */
+  /* Map semantic vars → Tailwind utility classes */
+  --color-bg:           var(--bg);
+  --color-surface:      var(--bg-surface);
+  --color-elevated:     var(--bg-elevated);
+  --color-card-bg:      var(--bg-card);
+  --color-input-bg:     var(--bg-input);
+  --color-fg:           var(--fg);
+  --color-fg-muted:     var(--fg-muted);
+  --color-fg-subtle:    var(--fg-subtle);
+  --color-border-ui:    var(--border);
+  --color-border-strong:var(--border-strong);
+  --color-border-subtle:var(--border-subtle);
+
+  /* NULLBYTE theme-aware dynamically mapped slate overrides */
+  --color-slate-950: var(--bg);
+  --color-slate-900: var(--bg-elevated);
+  --color-slate-855: var(--border-subtle);
+  --color-slate-850: var(--border-subtle);
+  --color-slate-800: var(--border);
+  --color-slate-700: var(--border-strong);
+  --color-slate-650: var(--fg-subtle);
+  --color-slate-600: var(--fg-subtle);
+  --color-slate-550: var(--fg-subtle);
+  --color-slate-505: var(--fg-subtle);
+  --color-slate-500: var(--fg-subtle);
+  --color-slate-455: var(--fg-muted);
+  --color-slate-450: var(--fg-muted);
+  --color-slate-404: var(--fg-muted);
+  --color-slate-400: var(--fg-muted);
+  --color-slate-355: var(--fg-muted);
+  --color-slate-350: var(--fg-muted);
+  --color-slate-300: var(--fg-muted);
+  --color-slate-205: var(--fg);
+  --color-slate-200: var(--fg);
+  --color-slate-105: var(--fg);
+  --color-slate-100: var(--fg);
+  --color-slate-50:  var(--fg);
 
   /* Vibrant NULLBYTE digital accent colors */
-  --color-cyber-cyan: #C8FF00;       /* Nullbyte Lime Yellow Primary */
-  --color-cyber-emerald: #00E5CC;    /* Vibrant Teal for Solved States */
-  --color-cyber-amber: #FFAA1D;      /* Warning Amber */
-  --color-cyber-crimson: #FF3D3D;    /* Vibrant Threat Red */
-  --color-cyber-violet: #8c76f9;     /* Deep intelligence violet */
-  
+  --color-cyber-cyan:    #C8FF00;
+  --color-cyber-emerald: #00E5CC;
+  --color-cyber-amber:   #FFAA1D;
+  --color-cyber-crimson: #FF3D3D;
+  --color-cyber-violet:  #8c76f9;
+
   --animate-border-glow: border-glow 4s linear infinite;
   --animate-scanline: scanline 8s linear infinite;
   --animate-ticker-scroll: ticker-scroll 32s linear infinite;
 
   @keyframes border-glow {
     0%, 100% { border-color: rgba(200, 255, 0, 0.3); }
-    50% { border-color: rgba(0, 229, 204, 0.3); }
+    50%       { border-color: rgba(0, 229, 204, 0.3); }
   }
-
   @keyframes scanline {
-    0% { transform: translateY(-100%); }
+    0%   { transform: translateY(-100%); }
     100% { transform: translateY(100%); }
   }
-
   @keyframes ticker-scroll {
     from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    to   { transform: translateX(-50%); }
   }
 }
 
-/* Custom globally useful utility presets for premium feels */
-.cyber-glow-cyan {
-  box-shadow: 0 0 15px rgba(200, 255, 0, 0.15);
-}
-
-.cyber-glow-emerald {
-  box-shadow: 0 0 15px rgba(0, 229, 204, 0.15);
-}
-
-.cyber-glow-crimson {
-  box-shadow: 0 0 15px rgba(255, 61, 61, 0.15);
-}
-
-.bg-dot-matrix {
-  background-image: radial-gradient(rgba(200, 255, 0, 0.02) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
+/* ═══════════════════════════════════════════════
+   GLOBAL BASE STYLES
+   ═══════════════════════════════════════════════ */
 body {
-  background-color: #080808;
-  color: #F0EDE4;
+  background-color: var(--bg);
+  color: var(--fg);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Override scrollbar to match dark luxury vibes */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #080808;
-}
-::-webkit-scrollbar-thumb {
-  background: #161616;
+/* ═══════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb  {
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255,255,255,0.03);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #222222;
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+
+/* ═══════════════════════════════════════════════
+   DOT MATRIX BACKGROUND
+   ═══════════════════════════════════════════════ */
+.bg-dot-matrix {
+  background-image: radial-gradient(var(--dot-matrix-color) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
+
+/* ═══════════════════════════════════════════════
+   GLOWS (dark-mode only utilities)
+   ═══════════════════════════════════════════════ */
+.cyber-glow-cyan    { box-shadow: 0 0 15px rgba(200,255,0,0.15); }
+.cyber-glow-emerald { box-shadow: 0 0 15px rgba(0,229,204,0.15); }
+.cyber-glow-crimson { box-shadow: 0 0 15px rgba(255,61,61,0.15); }
+
+/* Disable glows in light mode — they're harsh on white */
+html.light .cyber-glow-cyan,
+html.light .cyber-glow-emerald,
+html.light .cyber-glow-crimson {
+  box-shadow: none;
+}
+
+/* ═══════════════════════════════════════════════
+   LIGHT MODE — GLOBAL OVERRIDES
+   These override hardcoded Tailwind utilities used
+   throughout the app without requiring per-component edits.
+   ═══════════════════════════════════════════════ */
+
+/* --- Root shells --- */
+html.light body { background-color: var(--bg); color: var(--fg); }
+
+/* --- Navbar & chrome --- */
+html.light header {
+  background-color: var(--navbar-bg) !important;
+  border-bottom-color: var(--border) !important;
+  backdrop-filter: blur(12px);
+}
+html.light .bg-\[\#111111\] { background-color: var(--ticker-bg) !important; }
+html.light .bg-\[\#080808\]\/80 { background-color: var(--navbar-bg) !important; }
+
+/* Navbar top MODE CONTROLLER bar */
+html.light header > div:first-child {
+  background-color: var(--ticker-bg) !important;
+  border-bottom-color: var(--border) !important;
+  color: var(--fg-muted);
+}
+html.light header span.font-mono { color: var(--fg-muted); }
+
+/* Navbar text links */
+html.light nav a { color: var(--fg-muted); }
+html.light nav a:hover { color: var(--fg); }
+
+/* Active nav border remains cyber-cyan — no override */
+
+/* Logo text */
+html.light .font-mono.font-bold.text-slate-50 { color: var(--fg); }
+html.light .text-slate-500.tracking-widest { color: var(--fg-subtle); }
+
+/* --- Footer --- */
+html.light footer {
+  background-color: var(--footer-bg) !important;
+  border-top-color: var(--border) !important;
+}
+
+/* --- Live ticker --- */
+html.light .bg-\[\#0b0b0b\] { background-color: var(--ticker-bg) !important; }
+html.light .border-b.border-white\/\[0\.04\] { border-color: var(--border) !important; }
+html.light .border-t.border-white\/\[0\.04\] { border-color: var(--border) !important; }
+
+/* --- Cards / Panels --- */
+html.light .bg-\[\#0d0d0d\]  { background-color: var(--bg-card) !important; }
+html.light .bg-\[\#0c0c0c\]  { background-color: var(--bg-card) !important; }
+html.light .bg-\[\#0a0a0a\]  { background-color: var(--bg-surface) !important; }
+html.light .bg-\[\#080808\]  { background-color: var(--bg) !important; }
+html.light .bg-\[\#111111\]  { background-color: var(--bg-elevated) !important; }
+html.light .bg-\[\#0b0b0b\]  { background-color: var(--bg-card) !important; }
+
+html.light .border-white\/\[0\.04\]  { border-color: var(--border-subtle) !important; }
+html.light .border-white\/\[0\.06\]  { border-color: var(--border) !important; }
+html.light .border-white\/\[0\.08\]  { border-color: var(--border) !important; }
+html.light .border-white\/\[0\.12\]  { border-color: var(--border-strong) !important; }
+
+/* --- Slate color remaps for light mode readability --- */
+html.light .text-slate-50   { color: var(--fg) !important; }
+html.light .text-slate-100  { color: var(--fg) !important; }
+html.light .text-slate-200  { color: var(--fg) !important; }
+html.light .text-slate-300  { color: var(--fg-muted) !important; }
+html.light .text-slate-350  { color: var(--fg-muted) !important; }
+html.light .text-slate-400  { color: var(--fg-muted) !important; }
+html.light .text-slate-500  { color: var(--fg-subtle) !important; }
+html.light .text-slate-600  { color: var(--fg-subtle) !important; }
+
+/* Slate BG remaps */
+html.light .bg-slate-950 { background-color: var(--bg-input) !important; }
+html.light .bg-slate-900 { background-color: var(--bg-elevated) !important; }
+
+/* Slate border remaps */
+html.light .border-slate-800 { border-color: var(--border) !important; }
+html.light .border-slate-700 { border-color: var(--border-strong) !important; }
+html.light .border-slate-600 { border-color: rgba(0,0,0,0.2) !important; }
+
+/* --- Input field specific --- */
+html.light input,
+html.light textarea,
+html.light select {
+  background-color: var(--bg-input) !important;
+  color: var(--fg) !important;
+  border-color: var(--border-strong) !important;
+}
+html.light input::placeholder { color: var(--fg-subtle) !important; opacity: 1; }
+
+/* --- Button secondary in light mode --- */
+html.light button.border-slate-700 {
+  color: var(--fg-muted) !important;
+}
+
+/* --- Dashed borders (EmptyState) --- */
+html.light .border-dashed { border-color: var(--border-strong) !important; }
+
+/* --- Table rows --- */
+html.light .divide-y > *       { border-color: var(--border) !important; }
+html.light tr, html.light td, html.light th {
+  border-color: var(--border) !important;
+}
+html.light tr:hover { background-color: rgba(0,0,0,0.03) !important; }
+
+/* --- Form labels --- */
+html.light label { color: var(--fg-muted) !important; }
+
+/* --- MonoCode labels (tracking-widest) that were too dark --- */
+html.light .tracking-widest { color: var(--fg-subtle); }
+
+/* Allow cyber-cyan to remain accented even in light mode */
+html.light .text-cyber-cyan     { color: #7aae00 !important; }    /* Darker lime for light bg */
+html.light .border-cyber-cyan   { border-color: #7aae00 !important; }
+html.light .border-cyber-cyan\/30 { border-color: rgba(122,174,0,0.4) !important; }
+html.light .border-cyber-cyan\/50 { border-color: rgba(122,174,0,0.6) !important; }
+html.light .bg-cyber-cyan       { background-color: #C8FF00 !important; }
+html.light .text-cyber-violet   { color: #6b58d8 !important; }
+
+/* Hover states for cyber-cyan tinted items in light */
+html.light .hover\:border-cyber-cyan:hover  { border-color: #7aae00 !important; }
+html.light .hover\:text-cyber-cyan:hover    { color: #7aae00 !important; }
+
+/* --- Badge bg overrides --- */
+html.light .bg-cyber-cyan\/3   { background-color: rgba(122,174,0,0.08) !important; }
+html.light .bg-cyber-emerald\/3 { background-color: rgba(0,180,160,0.08) !important; }
+html.light .bg-cyber-crimson\/3 { background-color: rgba(200,30,30,0.08) !important; }
+html.light .bg-cyber-amber\/3   { background-color: rgba(200,130,0,0.08) !important; }
+html.light .bg-cyber-cyan\/5    { background-color: rgba(122,174,0,0.08) !important; }
+html.light .bg-cyber-cyan\/10   { background-color: rgba(122,174,0,0.12) !important; }
+html.light .bg-cyber-cyan\/20   { background-color: rgba(122,174,0,0.18) !important; }
+
+/* --- Misc bg-slate-900/10 panels (EmptyState) --- */
+html.light .bg-slate-900\/10  { background-color: rgba(0,0,0,0.03) !important; }
+html.light .bg-slate-800\/50  { background-color: rgba(0,0,0,0.05) !important; }
+
+/* --- Alert cards --- */
+html.light .border-cyber-emerald { border-color: #00b89e !important; }
+html.light .text-cyber-emerald   { color: #007a68 !important; }
+html.light .border-cyber-crimson { border-color: #cc2222 !important; }
+html.light .text-cyber-crimson   { color: #cc2222 !important; }
+html.light .border-cyber-amber   { border-color: #cc7700 !important; }
+html.light .text-cyber-amber     { color: #cc7700 !important; }
+
+/* --- ThemeToggle button in light mode --- */
+html.light button[aria-label*="mode"],
+html.light button[aria-label*="theme"] {
+  background-color: #f0efeb !important;
+  border-color: rgba(0,0,0,0.12) !important;
+  color: #444 !important;
+}
+
+/* --- Legal page nav strip --- */
+html.light .border-cyber-cyan\/50 { border-color: rgba(122,174,0,0.5) !important; }
+
+/* --- Section header left border (legal) --- */
+html.light .border-l-2.border-cyber-cyan { border-color: #7aae00 !important; }
+
+/* --- Cursor spotlight hidden in light mode (too harsh) --- */
+html.light .pointer-events-none.fixed.inset-0 { opacity: 0 !important; }
