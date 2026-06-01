@@ -105,6 +105,11 @@ func Login(cfg *config.Config) fiber.Handler {
 			return utils.SendError(c, "Invalid email or password", fiber.StatusUnauthorized)
 		}
 
+		// Check if user is banned
+		if user.IsBanned {
+			return utils.SendError(c, "Account is banned", fiber.StatusForbidden)
+		}
+
 		// Compare hash
 		if !utils.CheckPasswordHash(req.Password, user.PasswordHash) {
 			return utils.SendError(c, "Invalid email or password", fiber.StatusUnauthorized)

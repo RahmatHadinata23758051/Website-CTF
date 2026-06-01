@@ -14,6 +14,9 @@ type User struct {
 	Email        string         `gorm:"size:255;not null;unique;" json:"email"`
 	PasswordHash string         `gorm:"size:255;not null;" json:"-"` // Never expose in JSON responses
 	Role         string         `gorm:"size:50;not null;default:'user';" json:"role"`
+	IsBanned     bool           `gorm:"not null;default:false;" json:"is_banned"`
+	BannedAt     *time.Time     `json:"banned_at,omitempty"`
+	BannedReason *string        `gorm:"size:255;" json:"banned_reason,omitempty"`
 	CreatedAt    time.Time      `json:"created_at"`
 	UpdatedAt    time.Time      `json:"updated_at"`
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`

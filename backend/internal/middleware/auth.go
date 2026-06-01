@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"ctf-platform/backend/internal/config"
+	"ctf-platform/backend/internal/database"
+	"ctf-platform/backend/internal/models"
 	"ctf-platform/backend/internal/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -73,9 +75,19 @@ func RequireAuth(cfg *config.Config) fiber.Handler {
 			return utils.SendError(c, "Missing or invalid authorization token", fiber.StatusUnauthorized)
 		}
 
-		c.Locals("user_id", claims.UserID)
+		// Check user status in database dynamically
+		var user models.User
+		if err := database.DB.Select("id, role, is_banned").Where("id = ?", claims.UserID).First(&user).Error; err != nil {
+			return utils.SendError(c, "Missing or invalid authorization token", fiber.StatusUnauthorized)
+		}
+
+		if user.IsBanned {
+			return utils.SendError(c, "Account is banned", fiber.StatusForbidden)
+		}
+
+		c.Locals("user_id", user.ID.String())
 		c.Locals("email", claims.Email)
-		c.Locals("role", claims.Role)
+		c.Locals("role", user.Role)
 
 		return c.Next()
 	}
@@ -116,9 +128,15 @@ func OptionalAuth(cfg *config.Config) fiber.Handler {
 		// 4. Retrieve claims and push to Context Locals
 		claims, ok := token.Claims.(*UserClaims)
 		if ok {
-			c.Locals("user_id", claims.UserID)
-			c.Locals("email", claims.Email)
-			c.Locals("role", claims.Role)
+			var user models.User
+			if err := database.DB.Select("id, role, is_banned").Where("id = ?", claims.UserID).First(&user).Error; err == nil {
+				if user.IsBanned {
+					return utils.SendError(c, "Account is banned", fiber.StatusForbidden)
+				}
+				c.Locals("user_id", user.ID.String())
+				c.Locals("email", claims.Email)
+				c.Locals("role", user.Role)
+			}
 		}
 
 		return c.Next()
