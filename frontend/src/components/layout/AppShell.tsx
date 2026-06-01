@@ -6,7 +6,7 @@ import { CursorSpotlightBackground } from "./CursorSpotlightBackground";
 
 export function AppShell() {
   return (
-    <div className="min-h-screen bg-background text-slate-100 flex flex-col font-sans relative antialiased selection:bg-cyber-cyan/20 select-text">
+    <div className="min-h-screen bg-bg text-fg flex flex-col font-sans relative antialiased selection:bg-cyber-cyan/20 select-text transition-colors duration-200">
       {/* Interactive Cursor Spotlight Background */}
       <CursorSpotlightBackground />
 

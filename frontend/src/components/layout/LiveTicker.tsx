@@ -23,12 +23,15 @@ export function LiveTicker() {
   const repeatedEvents = [...events, ...events, ...events];
 
   return (
-    <div className="w-full bg-[#0d0d0d] border-b border-slate-800 text-xs py-2 overflow-hidden select-none font-mono tracking-wider relative z-40">
+    <div
+      className="w-full border-b text-xs py-2 overflow-hidden select-none font-mono tracking-wider relative z-40 transition-colors duration-200"
+      style={{ backgroundColor: "var(--ticker-bg)", borderBottomColor: "var(--border)" }}
+    >
       <div className="flex w-max items-center space-x-12 animate-ticker-scroll whitespace-nowrap">
         {repeatedEvents.map((ev, idx) => (
-          <div key={idx} className="flex items-center space-x-2 text-slate-500 hover:text-slate-400 cursor-default">
+          <div key={idx} className="flex items-center space-x-2 cursor-default">
             <Zap className="h-3 w-3 text-cyber-cyan animate-pulse shrink-0" />
-            <span className="text-[10px] uppercase font-bold text-slate-400">{ev}</span>
+            <span className="text-[10px] uppercase font-bold text-fg-muted">{ev}</span>
           </div>
         ))}
       </div>

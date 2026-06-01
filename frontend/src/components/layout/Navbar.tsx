@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { User, Layers, Power, ShieldCheck } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
 import { logout } from "../../features/auth/api";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
   const location = useLocation();
@@ -39,9 +40,15 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-[#080808]/80 backdrop-blur-md">
+    <header
+      className="sticky top-0 z-50 w-full border-b transition-colors duration-200"
+      style={{ backgroundColor: "var(--navbar-bg)", borderBottomColor: "var(--border)", backdropFilter: "blur(12px)" }}
+    >
       {/* MODE CONTROLLER */}
-      <div className="w-full bg-[#111111] border-b border-slate-800 text-[10px] py-1.5 px-4 flex flex-wrap items-center justify-between gap-2 max-w-7xl mx-auto md:px-8">
+      <div
+        className="w-full border-b text-[10px] py-1.5 px-4 flex flex-wrap items-center justify-between gap-2 max-w-7xl mx-auto md:px-8"
+        style={{ backgroundColor: "var(--ticker-bg)", borderBottomColor: "var(--border)" }}
+      >
         <div className="flex items-center gap-2 text-slate-500">
           <span className="flex h-1.5 w-1.5 relative">
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyber-cyan"></span>
@@ -148,12 +155,18 @@ export function Navbar() {
           >
             <Layers className="h-4 w-4" />
           </button>
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
         </div>
       </div>
 
       {/* MOBILE NAV BAR DRAWER */}
       {mobileMenuOpen && (
-        <div className="md:hidden w-full border-t border-slate-800 bg-[#080808] px-4 py-4 flex flex-col gap-2 animate-fade-in text-left">
+        <div
+          className="md:hidden w-full border-t px-4 py-4 flex flex-col gap-2 text-left transition-colors duration-200"
+          style={{ backgroundColor: "var(--bg)", borderTopColor: "var(--border)" }}
+        >
           <Link
             to="/"
             onClick={() => setMobileMenuOpen(false)}
