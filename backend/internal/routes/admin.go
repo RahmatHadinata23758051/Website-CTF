@@ -19,6 +19,15 @@ func SetupAdminRoutes(router fiber.Router, cfg *config.Config) {
 		middleware.RequireAdminRole(),
 	)
 
+	// User management
+	adminUserHandler := handlers.NewAdminUserHandler()
+	users := admin.Group("/users")
+	users.Get("/", adminUserHandler.ListUsers)
+	users.Get("/:id", adminUserHandler.GetUserDetail)
+	users.Patch("/:id/role", adminUserHandler.UpdateUserRole)
+	users.Patch("/:id/ban", adminUserHandler.BanUser)
+	users.Patch("/:id/unban", adminUserHandler.UnbanUser)
+
 	// Challenge CRUD management
 	challenges := admin.Group("/challenges")
 	challenges.Get("/", adminHandler.ListChallenges)
