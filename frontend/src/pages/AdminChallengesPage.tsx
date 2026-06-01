@@ -212,34 +212,34 @@ export function AdminChallengesPage() {
   return (
     <div className="w-full min-h-[calc(100vh-160px)] py-4 select-text text-left space-y-8">
       {/* HEADER INDEX */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/[0.04] pb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-ui pb-6">
         <div>
           <div className="flex items-center gap-2 font-mono text-xs text-cyber-violet mb-1.5 uppercase tracking-wider font-bold select-none animate-pulse">
             <Shield className="h-4 w-4" />
             ADMINISTRATOR HUB // CORE TRIAL MANAGER
           </div>
-          <h1 className="font-display font-light text-3xl text-slate-50 tracking-tight uppercase leading-none">
-            Challenges Console <span className="font-semibold text-slate-500">({challenges.length})</span>
+          <h1 className="font-display font-light text-3xl text-fg tracking-tight uppercase leading-none">
+            Challenges Console <span className="font-semibold text-fg-subtle">({challenges.length})</span>
           </h1>
-          <p className="font-sans text-slate-400 text-xs sm:text-sm mt-2 leading-relaxed">
+          <p className="font-sans text-fg-muted text-xs sm:text-sm mt-2 leading-relaxed">
             Create, update, activate, or soft-deactivate trial vector schemas for the RBLXSec public sandbox matrix.
           </p>
         </div>
 
         {/* Counter Stats Widget */}
-        <div className="flex gap-4 p-3 bg-[#0d0d0d] border border-slate-800 font-mono text-[10px] select-none h-fit">
+        <div className="flex gap-4 p-3 bg-card-bg border border-border-ui font-mono text-[10px] select-none h-fit">
           <div>
-            <span className="text-slate-500 block font-bold">ACTIVE TARGETS</span>
+            <span className="text-fg-subtle block font-bold">ACTIVE TARGETS</span>
             <span className="text-cyber-cyan font-bold text-xs">
               {activeCount} / {challenges.length} Online
             </span>
           </div>
-          <div className="w-[1px] bg-slate-800 mx-2"></div>
+          <div className="w-[1px] bg-border-ui mx-2"></div>
           <div>
-            <span className="text-slate-500 block font-bold">DEACTIVATED SCHEMA</span>
+            <span className="text-fg-subtle block font-bold">DEACTIVATED SCHEMA</span>
             <span className="text-cyber-amber font-bold text-xs">{inactiveCount} Standby</span>
           </div>
-          <div className="w-[1px] bg-slate-800 mx-2"></div>
+          <div className="w-[1px] bg-border-ui mx-2"></div>
           <button
             onClick={handleOpenCreate}
             className="flex items-center gap-1.5 px-3 py-1 bg-cyber-violet hover:bg-cyber-violet/90 text-white rounded font-mono text-[10px] font-bold uppercase transition-all duration-200 cursor-pointer active:scale-95 self-center"
@@ -251,7 +251,7 @@ export function AdminChallengesPage() {
       </div>
 
       {/* FILTER PANEL */}
-      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-[#0d0d0d] border border-slate-800 items-center justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card-bg border border-border-ui items-center justify-between">
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           {/* Query Search */}
           <div className="relative min-w-[200px] w-full sm:w-64">
@@ -260,16 +260,16 @@ export function AdminChallengesPage() {
               placeholder="Filter by keyword, title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 pl-9 text-xs text-slate-100 font-mono focus:outline-none transition-colors"
+              className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 pl-9 text-xs text-fg font-mono focus:outline-none transition-colors"
             />
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-650" />
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-fg-subtle" />
           </div>
 
           {/* Category Select Filter */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-300 font-mono focus:outline-none cursor-pointer"
+            className="bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg-muted font-mono focus:outline-none cursor-pointer"
           >
             <option value="All">All Categories</option>
             {categoriesList.map((cat) => (
@@ -283,7 +283,7 @@ export function AdminChallengesPage() {
         {(searchQuery || selectedCategory !== "All") && (
           <button
             onClick={resetFilters}
-            className="text-[10px] font-mono text-slate-500 hover:text-cyber-cyan transition-colors uppercase font-bold tracking-wider cursor-pointer"
+            className="text-[10px] font-mono text-fg-subtle hover:text-cyber-cyan transition-colors uppercase font-bold tracking-wider cursor-pointer"
           >
             Clear Active Filter
           </button>
@@ -308,10 +308,10 @@ export function AdminChallengesPage() {
 
       {/* ADMIN OPERATIONS TABLE */}
       {!isLoading && !error && (
-        <div className="w-full overflow-x-auto border border-slate-850 bg-[#070707] shadow-xl">
+        <div className="w-full overflow-x-auto border border-border-ui bg-card-bg shadow-xl">
           <table className="w-full min-w-[800px] text-left border-collapse font-mono text-[11px]">
             <thead>
-              <tr className="border-b border-slate-850 bg-slate-950 text-slate-400 uppercase tracking-widest text-[9px]">
+              <tr className="border-b border-border-ui bg-bg text-fg-muted uppercase tracking-widest text-[9px]">
                 <th className="p-4 w-1/3">Target Challenge Details</th>
                 <th className="p-4 text-center w-32">Difficulty</th>
                 <th className="p-4 text-center w-24">Points</th>
@@ -319,27 +319,27 @@ export function AdminChallengesPage() {
                 <th className="p-4 text-center w-40">System Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-850">
+            <tbody className="divide-y divide-border-subtle">
               {filteredChallenges.length > 0 ? (
                 filteredChallenges.map((ch) => (
                   <tr
                     key={ch.id}
-                    className={`hover:bg-slate-900/40 transition-colors ${
-                      !ch.is_active ? "opacity-60 bg-slate-950/20" : ""
+                    className={`hover:bg-surface/50 transition-colors ${
+                      !ch.is_active ? "opacity-60 bg-bg/20" : ""
                     }`}
                   >
                     {/* Trial Meta */}
                     <td className="p-4 space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-slate-100 hover:text-cyber-cyan transition-colors text-xs">
+                        <span className="font-bold text-fg hover:text-cyber-cyan transition-colors text-xs">
                           {ch.title}
                         </span>
                         <CategoryBadge category={ch.category as any} />
                       </div>
-                      <div className="text-[10px] text-slate-500 font-mono tracking-tighter truncate max-w-md">
-                        slug: <span className="text-slate-400">{ch.slug}</span>
+                      <div className="text-[10px] text-fg-subtle font-mono tracking-tighter truncate max-w-md">
+                        slug: <span className="text-fg-muted">{ch.slug}</span>
                       </div>
-                      <p className="text-[10px] text-slate-400 font-sans line-clamp-1 max-w-xl">
+                      <p className="text-[10px] text-fg-muted font-sans line-clamp-1 max-w-xl">
                         {ch.description}
                       </p>
                     </td>
@@ -384,8 +384,8 @@ export function AdminChallengesPage() {
                           title={ch.is_active ? "Deactivate Trial" : "Activate Trial"}
                           className={`p-1.5 border transition-all cursor-pointer ${
                             ch.is_active
-                              ? "bg-slate-900 border-slate-800 hover:border-cyber-amber/40 text-slate-400 hover:text-cyber-amber"
-                              : "bg-slate-900 border-slate-800 hover:border-cyber-cyan/40 text-slate-400 hover:text-cyber-cyan"
+                              ? "bg-surface border-border-ui hover:border-cyber-amber/40 text-fg-muted hover:text-cyber-amber"
+                              : "bg-surface border-border-ui hover:border-cyber-cyan/40 text-fg-muted hover:text-cyber-cyan"
                           }`}
                         >
                           {ch.is_active ? (
@@ -400,7 +400,7 @@ export function AdminChallengesPage() {
                           type="button"
                           onClick={() => setHintManagerChallenge(ch)}
                           title="Manage Hints"
-                          className="p-1.5 bg-slate-900 border border-slate-800 hover:border-cyber-cyan/40 text-slate-400 hover:text-cyber-cyan transition-all cursor-pointer"
+                          className="p-1.5 bg-surface border border-border-ui hover:border-cyber-cyan/40 text-fg-muted hover:text-cyber-cyan transition-all cursor-pointer"
                         >
                           <Lightbulb className="h-3.5 w-3.5 text-cyber-cyan" />
                         </button>
@@ -409,7 +409,7 @@ export function AdminChallengesPage() {
                         <button
                           onClick={() => handleOpenEdit(ch)}
                           title="Edit Target trial"
-                          className="p-1.5 bg-slate-900 border border-slate-800 hover:border-cyber-cyan/40 text-slate-400 hover:text-cyber-cyan transition-all cursor-pointer"
+                          className="p-1.5 bg-surface border border-border-ui hover:border-cyber-cyan/40 text-fg-muted hover:text-cyber-cyan transition-all cursor-pointer"
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
@@ -425,7 +425,7 @@ export function AdminChallengesPage() {
                             </button>
                             <button
                               onClick={() => setDeleteConfirmId(null)}
-                              className="px-2 py-1 bg-slate-850 hover:bg-slate-800 text-slate-300 font-bold text-[9px] uppercase transition-all cursor-pointer"
+                              className="px-2 py-1 bg-bg hover:bg-surface text-fg-muted font-bold text-[9px] uppercase transition-all cursor-pointer"
                             >
                               NO
                             </button>
@@ -434,7 +434,7 @@ export function AdminChallengesPage() {
                           <button
                             onClick={() => setDeleteConfirmId(ch.id)}
                             title="Soft Delete Challenge"
-                            className="p-1.5 bg-slate-900 border border-slate-800 hover:border-cyber-crimson/40 text-slate-400 hover:text-cyber-crimson transition-all cursor-pointer"
+                            className="p-1.5 bg-surface border border-border-ui hover:border-cyber-crimson/40 text-fg-muted hover:text-cyber-crimson transition-all cursor-pointer"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
@@ -445,7 +445,7 @@ export function AdminChallengesPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-500 font-mono">
+                  <td colSpan={5} className="p-8 text-center text-fg-subtle font-mono">
                     NO ADMINISTRATIVE TRIAL VECTORS RESOLVED
                   </td>
                 </tr>
@@ -457,20 +457,20 @@ export function AdminChallengesPage() {
 
       {/* CREATE & EDITING FORM MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto animate-fade-in select-text">
-          <div className="w-full max-w-xl bg-[#090909] border border-slate-800 shadow-2xl relative transition-all duration-300 flex flex-col my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg/85 backdrop-blur-md overflow-y-auto animate-fade-in select-text">
+          <div className="w-full max-w-xl bg-card-bg border border-border-ui shadow-2xl relative transition-all duration-300 flex flex-col my-8">
             {/* Close Cross */}
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute right-4 top-4 text-slate-500 hover:text-slate-200 transition-colors p-1 cursor-pointer"
+              className="absolute right-4 top-4 text-fg-subtle hover:text-fg transition-colors p-1 cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
 
             {/* Modal Header */}
-            <div className="p-6 border-b border-slate-855 flex items-center gap-2">
+            <div className="p-6 border-b border-border-ui flex items-center gap-2">
               <FolderLock className="h-4.5 w-4.5 text-cyber-violet animate-pulse" />
-              <span className="font-display font-light text-base tracking-widest text-slate-50 uppercase">
+              <span className="font-display font-light text-base tracking-widest text-fg uppercase">
                 {editingChallenge ? "UPDATE TRIAL INSTANCE" : "PROVISION NEW TRIAL"}
               </span>
             </div>
@@ -490,7 +490,7 @@ export function AdminChallengesPage() {
               {/* Title & Points Row */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2 space-y-1">
-                  <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold">
+                  <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
                     Challenge Title *
                   </label>
                   <input
@@ -498,12 +498,12 @@ export function AdminChallengesPage() {
                     required
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-100 font-mono focus:outline-none transition-all"
+                    className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
                     placeholder="e.g. SQLi Bypass 101"
                   />
                 </div>
                 <div className="col-span-1 space-y-1">
-                  <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold">
+                  <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
                     Points *
                   </label>
                   <input
@@ -512,21 +512,21 @@ export function AdminChallengesPage() {
                     required
                     value={formData.points}
                     onChange={(e) => setFormData({ ...formData, points: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-100 font-mono focus:outline-none transition-all"
+                    className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
                   />
                 </div>
               </div>
 
               {/* Slug Input */}
               <div className="space-y-1">
-                <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold">
+                <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
                   Custom Slug (Optional)
                 </label>
                 <input
                   type="text"
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-100 font-mono focus:outline-none transition-all"
+                  className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
                   placeholder="e.g. sqli-bypass-101 (Leave empty to auto-generate)"
                 />
               </div>
@@ -534,13 +534,13 @@ export function AdminChallengesPage() {
               {/* Category & Difficulty Tiers Row */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold">
+                  <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
                     Category *
                   </label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-300 font-mono focus:outline-none cursor-pointer"
+                    className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg-muted font-mono focus:outline-none cursor-pointer"
                   >
                     {categoriesList.map((cat) => (
                       <option key={cat} value={cat}>
@@ -550,13 +550,13 @@ export function AdminChallengesPage() {
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold">
+                  <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
                     Difficulty Tier *
                   </label>
                   <select
                     value={formData.difficulty}
                     onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-300 font-mono focus:outline-none cursor-pointer"
+                    className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg-muted font-mono focus:outline-none cursor-pointer"
                   >
                     {difficultiesList.map((diff) => (
                       <option key={diff} value={diff}>
@@ -570,10 +570,10 @@ export function AdminChallengesPage() {
               {/* Description Body */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold">
+                  <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
                     Challenge Description *
                   </label>
-                  <span className="text-[8px] text-slate-600 font-mono uppercase tracking-widest">
+                  <span className="text-[8px] text-fg-subtle font-mono uppercase tracking-widest">
                     Markdown Supported
                   </span>
                 </div>
@@ -582,14 +582,14 @@ export function AdminChallengesPage() {
                   rows={4}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-100 font-sans focus:outline-none transition-all resize-y"
+                  className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-sans focus:outline-none transition-all resize-y placeholder:text-fg-subtle"
                   placeholder="Provide deep sandbox trials connection steps, vector endpoints, or download materials..."
                 />
               </div>
 
               {/* Flag Field (Secure update mechanism) */}
-              <div className="space-y-1 border border-slate-850/60 p-3 bg-slate-950/20">
-                <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold">
+              <div className="space-y-1 border border-border-ui p-3 bg-surface">
+                <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
                   Secret Flag Hash Input {editingChallenge ? "(Optional)" : "*"}
                 </label>
                 <input
@@ -597,14 +597,14 @@ export function AdminChallengesPage() {
                   required={!editingChallenge}
                   value={formData.flag}
                   onChange={(e) => setFormData({ ...formData, flag: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-100 font-mono focus:outline-none transition-all"
+                  className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
                   placeholder={
                     editingChallenge
                       ? "•••••••• (Leave blank to preserve active backend flag hash)"
                       : "iet{your_trial_secret_flag}"
                   }
                 />
-                <p className="text-[9px] text-slate-500 leading-relaxed font-mono">
+                <p className="text-[9px] text-fg-subtle leading-relaxed font-mono">
                   {editingChallenge
                     ? "Leave this input completely blank to preserve the active challenge secret flag hash in the database."
                     : "Plaintext flag input is securely hashed prior to storage and never exposed to the public API."}
@@ -619,25 +619,25 @@ export function AdminChallengesPage() {
 
               {/* External URL Sandbox */}
               <div className="space-y-1">
-                <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold">
+                <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
                   External Link Sandbox
                 </label>
                 <input
                   type="url"
                   value={formData.external_link}
                   onChange={(e) => setFormData({ ...formData, external_link: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-850 hover:border-slate-700 focus:border-cyber-violet rounded p-2 text-xs text-slate-100 font-mono focus:outline-none transition-all"
+                  className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
                   placeholder="http://domain.com:8080"
                 />
               </div>
 
               {/* Schema Active Toggle Switch */}
-              <div className="flex items-center justify-between p-3 bg-slate-950/40 border border-slate-850">
+              <div className="flex items-center justify-between p-3 bg-surface border border-border-ui">
                 <div>
-                  <span className="font-mono text-[10px] text-slate-350 block font-bold uppercase tracking-wider">
+                  <span className="font-mono text-[10px] text-fg-muted block font-bold uppercase tracking-wider">
                     Publish Online Immediately
                   </span>
-                  <span className="text-[9px] text-slate-500 font-mono">
+                  <span className="text-[9px] text-fg-subtle font-mono">
                     If deactivated, this trial remains completely hidden from all public indexes.
                   </span>
                 </div>
@@ -655,7 +655,7 @@ export function AdminChallengesPage() {
               </div>
 
               {/* Submit Buttons */}
-              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-855">
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-border-ui">
                 <Button
                   type="button"
                   variant="secondary"
