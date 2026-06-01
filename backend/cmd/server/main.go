@@ -84,6 +84,12 @@ func main() {
 	// Stats Endpoint Routes
 	routes.SetupStatsRoutes(api, cfg)
 
+	// Profile Endpoint Routes
+	routes.SetupProfileRoutes(api, cfg)
+
+	// Account Endpoint Routes
+	routes.SetupAccountRoutes(api, cfg)
+
 	// Admin Endpoint Routes (admin-only, JWT + role guard applied inside)
 	routes.SetupAdminRoutes(api, cfg)
 
