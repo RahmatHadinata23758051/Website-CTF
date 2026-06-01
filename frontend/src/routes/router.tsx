@@ -80,6 +80,22 @@ export const router = createBrowserRouter([
             path: "admin",
             element: <AdminPage />,
           },
+          {
+            path: "admin/challenges",
+            element: <AdminPage />,
+          },
+          {
+            path: "admin/users",
+            element: <AdminPage />,
+          },
+          {
+            path: "admin/submissions",
+            element: <AdminPage />,
+          },
+          {
+            path: "admin/solves",
+            element: <AdminPage />,
+          },
         ],
       },
     ],
