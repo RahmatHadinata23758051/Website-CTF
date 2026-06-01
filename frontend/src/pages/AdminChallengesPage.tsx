@@ -210,7 +210,7 @@ export function AdminChallengesPage() {
   const inactiveCount = challenges.length - activeCount;
 
   return (
-    <div className="w-full min-h-[calc(100vh-160px)] py-4 select-text text-left space-y-8">
+    <div className="w-full space-y-8">
       {/* HEADER INDEX */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-ui pb-6">
         <div>

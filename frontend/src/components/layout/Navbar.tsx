@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, Layers, Power, ShieldCheck } from "lucide-react";
+import { User, Layers, Power, ShieldCheck, Settings } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
 import { logout } from "../../features/auth/api";
 import { ThemeToggle } from "./ThemeToggle";
@@ -97,11 +97,19 @@ export function Navbar() {
               Profile
             </div>
           </Link>
+          {isAuthenticated && (
+            <Link to="/account" className={navItemClass("/account")}>
+              <div className="flex items-center gap-1.5">
+                <Settings className="h-3.5 w-3.5" />
+                Account
+              </div>
+            </Link>
+          )}
           {isAuthenticated && user?.role === "admin" && (
-            <Link to="/admin/challenges" className={navItemClass("/admin/challenges")}>
-              <div className="flex items-center gap-1.5 text-cyber-violet">
+            <Link to="/admin" className={navItemClass("/admin")}>
+              <div className="flex items-center gap-1.5 text-cyber-violet font-bold">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                Admin
+                Admin Panel
               </div>
             </Link>
           )}
@@ -199,11 +207,21 @@ export function Navbar() {
           >
             Profile
           </Link>
+          {isAuthenticated && (
+            <Link
+              to="/account"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/account") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+                }`}
+            >
+              Account
+            </Link>
+          )}
           {isAuthenticated && user?.role === "admin" && (
             <Link
-              to="/admin/challenges"
+              to="/admin"
               onClick={() => setMobileMenuOpen(false)}
-              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/admin/challenges") ? "bg-slate-900 text-cyber-violet font-bold" : "text-cyber-violet/85"
+              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/admin") ? "bg-slate-900 text-cyber-violet font-bold" : "text-cyber-violet/85"
                 }`}
             >
               Admin Panel

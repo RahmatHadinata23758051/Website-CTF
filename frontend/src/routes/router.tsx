@@ -7,7 +7,9 @@ import { ChallengesPage } from "../pages/ChallengesPage";
 import { ChallengeDetailPage } from "../pages/ChallengeDetailPage";
 import { ScoreboardPage } from "../pages/ScoreboardPage";
 import { ProfilePage } from "../pages/ProfilePage";
-import { AdminChallengesPage } from "../pages/AdminChallengesPage";
+import { AccountPage } from "../pages/AccountPage";
+import { ForgotPasswordPage } from "../pages/ForgotPasswordPage";
+import { AdminPage } from "../pages/admin/AdminPage";
 import { RulesPage } from "../pages/legal/RulesPage";
 import { TermsPage } from "../pages/legal/TermsPage";
 import { PrivacyPage } from "../pages/legal/PrivacyPage";
@@ -29,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: "register",
         element: <RegisterPage />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPasswordPage />,
       },
       {
         path: "rules",
@@ -61,14 +67,18 @@ export const router = createBrowserRouter([
             path: "profile",
             element: <ProfilePage />,
           },
+          {
+            path: "account",
+            element: <AccountPage />,
+          },
         ],
       },
       {
         element: <ProtectedRoute allowedRoles={["admin"]} />,
         children: [
           {
-            path: "admin/challenges",
-            element: <AdminChallengesPage />,
+            path: "admin",
+            element: <AdminPage />,
           },
         ],
       },
