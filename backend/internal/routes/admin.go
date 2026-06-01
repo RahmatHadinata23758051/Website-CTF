@@ -28,6 +28,12 @@ func SetupAdminRoutes(router fiber.Router, cfg *config.Config) {
 	users.Patch("/:id/ban", adminUserHandler.BanUser)
 	users.Patch("/:id/unban", adminUserHandler.UnbanUser)
 
+	// Submission & Solve monitoring (admin only)
+	adminSubHandler := handlers.NewAdminSubmissionHandler()
+	admin.Get("/submissions/stats", adminSubHandler.GetSubmissionStats)
+	admin.Get("/submissions", adminSubHandler.ListSubmissions)
+	admin.Get("/solves", adminSubHandler.ListSolves)
+
 	// Challenge CRUD management
 	challenges := admin.Group("/challenges")
 	challenges.Get("/", adminHandler.ListChallenges)
