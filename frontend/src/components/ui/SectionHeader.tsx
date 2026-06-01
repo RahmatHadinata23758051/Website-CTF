@@ -14,11 +14,11 @@ export function SectionHeader({ index, title, description, aside, className = ""
         <div className="font-mono text-[9px] text-cyber-cyan tracking-[0.15em] uppercase">
           {index} / INDEX
         </div>
-        <h2 className="font-display font-medium text-3xl text-slate-100 tracking-tight leading-none uppercase">
+        <h2 className="font-display font-medium text-3xl text-fg tracking-tight leading-none uppercase">
           {title}
         </h2>
         {description && (
-          <p className="font-sans text-slate-400 text-xs sm:text-sm max-w-lg leading-relaxed">
+          <p className="font-sans text-fg-muted text-xs sm:text-sm max-w-lg leading-relaxed">
             {description}
           </p>
         )}
