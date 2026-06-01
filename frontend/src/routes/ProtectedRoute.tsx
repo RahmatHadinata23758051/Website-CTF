@@ -25,12 +25,12 @@ export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   if (allowedRoles && (!user || !allowedRoles.includes(user.role))) {
     return (
       <div className="w-full min-h-[calc(100vh-160px)] flex flex-col items-center justify-center py-12 select-none text-center animate-fade-in">
-        <div className="max-w-md p-6 bg-[#0a0a0a] border border-cyber-crimson text-cyber-crimson font-mono text-xs shadow-2xl space-y-4">
+        <div className="max-w-md p-6 bg-surface border border-cyber-crimson text-cyber-crimson font-mono text-xs shadow-2xl space-y-4">
           <div className="font-bold tracking-widest text-sm uppercase">
             [!] SECURITY WARNING: 403 FORBIDDEN
           </div>
           <div className="w-[1px] h-4 bg-cyber-crimson mx-auto"></div>
-          <p className="text-slate-400 text-[11px] leading-relaxed">
+          <p className="text-fg-muted text-[11px] leading-relaxed">
             ADMINISTRATOR ACCESS PRIVILEGES ARE REQUIRED TO LOAD THIS WORKSPACE CONTROL SCHEMA.
             UNAUTHORIZED ATTEMPTS HAVE BEEN LOGGED.
           </p>

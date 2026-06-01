@@ -61,31 +61,31 @@ export function ChallengesPage() {
   return (
     <div className="w-full min-h-[calc(100vh-160px)] py-4 select-text text-left space-y-8">
       {/* HEADER INDEX */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/[0.04] pb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-ui pb-6">
         <div>
           <div className="flex items-center gap-2 font-mono text-xs text-cyber-cyan mb-1.5 uppercase tracking-wider font-bold select-none">
             <FolderOpen className="h-4 w-4" />
             02 // VECTORS INDEX
           </div>
-          <h1 className="font-display font-light text-3xl text-slate-50 tracking-tight uppercase leading-none">
-            Active Target Index <span className="font-semibold text-slate-500">({rawChallenges.length})</span>
+          <h1 className="font-display font-light text-3xl text-fg tracking-tight uppercase leading-none">
+            Active Target Index <span className="font-semibold text-fg-subtle">({rawChallenges.length})</span>
           </h1>
-          <p className="font-sans text-slate-400 text-xs sm:text-sm mt-2 leading-relaxed">
+          <p className="font-sans text-fg-muted text-xs sm:text-sm mt-2 leading-relaxed">
             Browse verified security vector instances, query sandbox connection strings, and submit key hashes.
           </p>
         </div>
 
         {/* Counter Widget */}
-        <div className="flex gap-4 p-3 bg-[#0d0d0d] border border-slate-800 font-mono text-[10px] select-none h-fit">
+        <div className="flex gap-4 p-3 bg-card-bg border border-border-ui font-mono text-[10px] select-none h-fit">
           <div>
-            <span className="text-slate-500 block font-bold">ARENA COMPLETED</span>
+            <span className="text-fg-subtle block font-bold">ARENA COMPLETED</span>
             <span className="text-cyber-emerald font-bold text-xs">
               {solvedCount} / {rawChallenges.length} Solves
             </span>
           </div>
-          <div className="w-[1px] bg-slate-800 mx-2"></div>
+          <div className="w-[1px] bg-border-ui mx-2"></div>
           <div>
-            <span className="text-slate-500 block font-bold">TOTAL SCORE</span>
+            <span className="text-fg-subtle block font-bold">TOTAL SCORE</span>
             <span className="text-cyber-cyan font-bold text-xs">{totalScore} PTS</span>
           </div>
         </div>
@@ -94,15 +94,15 @@ export function ChallengesPage() {
       {/* SEARCH AND INTERACTIVE FILTERS CONTROLLER */}
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
         {/* Left Side: Filter Control Hub */}
-        <div className="xl:col-span-1 space-y-5 p-5 bg-[#0d0d0d] border border-slate-800/80">
-          <div className="flex items-center gap-1.5 pb-3 border-b border-slate-800 text-[10px] font-mono font-bold tracking-wider text-slate-400 select-none">
+        <div className="xl:col-span-1 space-y-5 p-5 bg-card-bg border border-border-ui">
+          <div className="flex items-center gap-1.5 pb-3 border-b border-border-ui text-[10px] font-mono font-bold tracking-wider text-fg-muted select-none">
             <SlidersHorizontal className="h-3.5 w-3.5 text-cyber-cyan" />
             FILTER CONSOLE PARAMETERS
           </div>
 
           {/* Search Query */}
           <div className="space-y-2">
-            <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold select-none">
+            <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold select-none">
               Query Search
             </label>
             <div className="relative">
@@ -112,15 +112,15 @@ export function ChallengesPage() {
                 value={searchQuery}
                 aria-label="Search trials"
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-cyber-cyan rounded p-2.5 pl-9 text-xs text-slate-100 font-mono focus:outline-none transition-colors"
+                className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-cyan rounded p-2.5 pl-9 text-xs text-fg font-mono focus:outline-none transition-colors"
               />
-              <Search className="absolute left-3 top-3 h-3.5 w-3.5 text-slate-600" />
+              <Search className="absolute left-3 top-3 h-3.5 w-3.5 text-fg-subtle" />
             </div>
           </div>
 
           {/* Difficulty Dropdowns */}
           <div className="space-y-2">
-            <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold select-none">
+            <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold select-none">
               Difficulty Tier
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -131,7 +131,7 @@ export function ChallengesPage() {
                   className={`px-3 py-1 text-[10px] font-mono border transition-all cursor-pointer ${
                     selectedDifficulty === diff
                       ? "bg-cyber-cyan/10 text-cyber-cyan border-cyber-cyan/40 font-bold"
-                      : "bg-slate-950 text-slate-450 border-slate-800 hover:border-slate-700 hover:text-slate-200"
+                      : "bg-input-bg text-fg-muted border-border-ui hover:border-border-strong hover:text-fg"
                   }`}
                 >
                   {diff}
@@ -142,18 +142,18 @@ export function ChallengesPage() {
 
           {/* Status Selectors */}
           <div className="space-y-2">
-            <label className="font-mono text-[9px] text-slate-500 uppercase tracking-widest block font-bold select-none">
+            <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold select-none">
               Solve Status
             </label>
-            <div className="grid grid-cols-3 gap-1 rounded bg-slate-950 p-1 border border-slate-800">
+            <div className="grid grid-cols-3 gap-1 rounded bg-input-bg p-1 border border-border-ui">
               {(["All", "Solved", "Unsolved"] as const).map((status) => (
                 <button
                   key={status}
                   onClick={() => setSelectedStatus(status)}
                   className={`py-1 rounded text-[9px] font-mono text-center transition-all cursor-pointer ${
                     selectedStatus === status
-                      ? "bg-slate-900 border border-slate-800 text-slate-100 font-bold"
-                      : "text-slate-500 hover:text-slate-350"
+                      ? "bg-surface border border-border-strong text-fg font-bold"
+                      : "text-fg-subtle hover:text-fg"
                   }`}
                 >
                   {status}
@@ -169,7 +169,7 @@ export function ChallengesPage() {
             searchQuery !== "") && (
             <button
               onClick={resetFilters}
-              className="w-full text-center py-2.5 border border-dashed border-slate-800 hover:border-cyber-cyan/40 rounded font-mono text-[10px] text-slate-400 hover:text-cyber-cyan hover:bg-cyber-cyan/2 transition-all cursor-pointer font-bold uppercase tracking-wider"
+              className="w-full text-center py-2.5 border border-dashed border-border-strong hover:border-cyber-cyan/40 rounded font-mono text-[10px] text-fg-muted hover:text-cyber-cyan hover:bg-cyber-cyan/2 transition-all cursor-pointer font-bold uppercase tracking-wider"
             >
               Reset Current Filters
             </button>
@@ -179,7 +179,7 @@ export function ChallengesPage() {
         {/* Right Side: Category Slider + Grid Cards */}
         <div className="xl:col-span-3 space-y-6">
           {/* Quick Category Tab Horizontal Line */}
-          <div className="border-b border-slate-900 overflow-x-auto select-none scroller-hidden">
+          <div className="border-b border-border-subtle overflow-x-auto select-none scroller-hidden">
             <div className="flex gap-1.5 pb-2 min-w-max">
               {categoriesList.map((cat) => (
                 <button
@@ -188,7 +188,7 @@ export function ChallengesPage() {
                   className={`px-4 py-2 font-display text-xs sm:text-sm font-medium tracking-wider border-b-2 transition-all uppercase cursor-pointer ${
                     selectedCategory === cat
                       ? "border-cyber-cyan text-cyber-cyan bg-cyber-cyan/5 font-semibold"
-                      : "border-transparent text-slate-500 hover:text-slate-300"
+                      : "border-transparent text-fg-subtle hover:text-fg"
                   }`}
                 >
                   {cat}
@@ -198,7 +198,7 @@ export function ChallengesPage() {
           </div>
 
           {/* Counts and Sort metrics */}
-          <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 select-none">
+          <div className="flex items-center justify-between text-[10px] font-mono text-fg-subtle select-none">
             <span className="uppercase tracking-wider">SHOWING {filteredChallenges.length} OF {rawChallenges.length} TARGET VECTORS</span>
             <span className="uppercase tracking-wider font-bold">ORDER: POINT VALUE ASCENDING</span>
           </div>

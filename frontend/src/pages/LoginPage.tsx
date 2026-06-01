@@ -43,7 +43,7 @@ export function LoginPage() {
 
   return (
     <div className="max-w-md mx-auto py-12 select-text">
-      <div className="bg-[#0d0d0d] border border-white/[0.04] p-8 relative overflow-hidden flex flex-col justify-between text-left space-y-6">
+      <div className="bg-card-bg border border-border-ui p-8 relative overflow-hidden flex flex-col justify-between text-left space-y-6">
         {/* Top lime neon bar on form card */}
         <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-cyber-cyan"></div>
 
@@ -51,10 +51,10 @@ export function LoginPage() {
           <div className="font-mono text-[9px] text-cyber-cyan tracking-[0.2em] uppercase font-bold select-none">
             STAGE_AUTH / SIGNIN
           </div>
-          <h1 className="font-display font-bold text-2xl text-slate-100 uppercase tracking-tight leading-none">
+          <h1 className="font-display font-bold text-2xl text-fg uppercase tracking-tight leading-none">
             Competitor Login
           </h1>
-          <p className="font-sans text-slate-400 text-xs mt-2 leading-relaxed">
+          <p className="font-sans text-fg-muted text-xs mt-2 leading-relaxed">
             Authenticate using your credentials to secure connection tunnels, query active challenges, and register solves.
           </p>
         </div>
@@ -95,9 +95,9 @@ export function LoginPage() {
           </div>
         </form>
 
-        <div className="border-t border-white/[0.03] pt-4 text-center font-mono text-[10px] text-slate-500 uppercase tracking-wide">
+        <div className="border-t border-border-subtle pt-4 text-center font-mono text-[10px] text-fg-subtle uppercase tracking-wide">
           New to RBLXSec?{" "}
-          <Link to="/register" className="text-cyber-cyan hover:text-white transition-colors font-bold ml-1">
+          <Link to="/register" className="text-cyber-cyan hover:text-fg transition-colors font-bold ml-1">
             Register
           </Link>
         </div>
