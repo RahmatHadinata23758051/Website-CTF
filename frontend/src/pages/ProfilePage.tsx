@@ -1,42 +1,48 @@
-import { UserCheck, ShieldCheck } from "lucide-react";
+import { UserCheck, ShieldCheck, Trophy, Layers } from "lucide-react";
 import { StatCard } from "../components/ui/StatCard";
-import { useAuthStore } from "../stores/authStore";
-import { useScoreboard } from "../features/scoreboard/hooks";
-import { useChallenges } from "../features/challenges/hooks";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { Alert } from "../components/ui/Alert";
+import { DifficultyBadge } from "../components/ctf/DifficultyBadge";
+import { useProfileSummary } from "../features/profile/hooks";
 import { mapBackendCategoryToUI } from "../features/challenges/api";
 
 export function ProfilePage() {
-  const user = useAuthStore((state) => state.user);
+  const { data: summaryRes, isLoading, error, refetch } = useProfileSummary();
 
-  // Fetch real-time data from scoreboard and challenges endpoints
-  const { data: scoreboardData } = useScoreboard();
-  const { data: challengesRes } = useChallenges();
+  // Loading State Display
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-[calc(100vh-160px)] flex flex-col items-center justify-center py-16 select-none">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
-  const challenges = challengesRes?.data?.challenges || [];
+  // Error State Display
+  if (error || !summaryRes?.success) {
+    return (
+      <div className="py-16 text-center max-w-lg mx-auto space-y-6">
+        <div className="max-w-full text-left">
+          <Alert variant="error" title="SYNCHRONIZATION ERROR">
+            Unable to synchronize operator profile details. Check backend connection.
+          </Alert>
+        </div>
+        <button
+          onClick={() => refetch()}
+          className="px-6 py-2.5 bg-bg hover:bg-surface border border-border-ui text-xs font-mono font-bold uppercase tracking-wider text-fg-muted cursor-pointer transition-colors"
+        >
+          RECONNECT PROFILE FEED
+        </button>
+      </div>
+    );
+  }
 
-  // Match the active logged-in user in scoreboard rankings
-  const userScore = scoreboardData?.data?.scoreboard?.find((entry: any) => entry.user_id === user?.id);
-  
-  const points = userScore ? userScore.total_points : 0;
-  const globalRank = userScore ? `#${userScore.rank}` : "UNRANKED";
-  const solvesCount = userScore ? userScore.total_solves : 0;
+  const { user, stats, recent_solves, solved_challenges, category_breakdown } = summaryRes.data;
 
-  // Domain progression mapping calculated from real challenges database
-  const categoriesList = ["Web", "Reverse", "Crypto", "Pwn", "OSINT", "Forensics", "Steganography", "Misc"];
-  
-  const categoriesProgress = categoriesList.map((cat) => {
-    const catChallenges = challenges.filter((c) => c.category === cat);
-    const solved = catChallenges.filter((c) => c.is_solved).length;
-    return {
-      category: cat,
-      title: mapBackendCategoryToUI(cat),
-      solved,
-      total: catChallenges.length,
-    };
-  });
-
-  // Solves timeline populated dynamically from solved challenges list
-  const solvedChallenges = challenges.filter((c) => c.is_solved);
+  const points = stats.total_points;
+  const globalRank = stats.rank !== null ? `#${stats.rank}` : "UNRANKED";
+  const solvesCount = stats.total_solves;
+  const categoriesCount = stats.total_categories_solved;
 
   return (
     <div className="w-full min-h-[calc(100vh-160px)] py-4 select-text text-left space-y-8">
@@ -48,13 +54,22 @@ export function ProfilePage() {
             04 // COMPETITOR CONSOLE
           </div>
           <h1 className="font-display font-light text-3xl text-fg tracking-tight uppercase leading-none">
-            PLAYER PROFILE <span className="font-semibold text-fg-muted">({user?.name || "OPERATOR"})</span>
+            PLAYER PROFILE <span className="font-semibold text-fg-muted">({user.name})</span>
           </h1>
           <p className="font-sans text-fg-muted text-xs sm:text-sm mt-2 leading-relaxed">
             Monitor secure identity params, platform progression, and credentials tunnels.
           </p>
         </div>
       </div>
+
+      {/* Prominent Empty State Alert */}
+      {solvesCount === 0 && (
+        <div className="max-w-full text-left select-none animate-fade-in">
+          <Alert variant="info" title="PROFILE STATUS: REGISTERED">
+            No solves yet. Start solving challenges to build your profile.
+          </Alert>
+        </div>
+      )}
 
       {/* CORE IDENTITY & STATS GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -63,10 +78,11 @@ export function ProfilePage() {
         <div className="lg:col-span-8 space-y-6">
           
           {/* STAT CARDS ROW */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <StatCard label="OVERALL POINTS" value={`${points} PTS`} accent />
             <StatCard label="LEADERBOARD RANK" value={globalRank} />
             <StatCard label="SOLVES COMPLETED" value={`${solvesCount} solves`} />
+            <StatCard label="DOMAINS SOLVED" value={`${categoriesCount} tracks`} />
           </div>
 
           {/* USER PROFILE DETAILS CARD */}
@@ -77,20 +93,20 @@ export function ProfilePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
               <div className="space-y-1">
                 <span className="text-fg-subtle uppercase tracking-widest text-[9px] block">Competitor Name</span>
-                <div className="text-fg uppercase tracking-wider font-bold">{user?.name || "N/A"}</div>
+                <div className="text-fg uppercase tracking-wider font-bold">{user.name}</div>
               </div>
               <div className="space-y-1">
                 <span className="text-fg-subtle uppercase tracking-widest text-[9px] block">Node Address (Email)</span>
-                <div className="text-fg select-all">{user?.email || "N/A"}</div>
+                <div className="text-fg select-all">{user.email}</div>
               </div>
               <div className="space-y-1">
                 <span className="text-fg-subtle uppercase tracking-widest text-[9px] block">System Privilege (Role)</span>
-                <div className="text-cyber-cyan uppercase tracking-wider font-bold">{user?.role || "USER"}</div>
+                <div className="text-cyber-cyan uppercase tracking-wider font-bold">{user.role}</div>
               </div>
               <div className="space-y-1">
                 <span className="text-fg-subtle uppercase tracking-widest text-[9px] block">Established Link (Created)</span>
                 <div className="text-fg uppercase font-bold">
-                  {user?.created_at ? new Date(user.created_at).toLocaleDateString("id-ID", {
+                  {user.created_at ? new Date(user.created_at).toLocaleDateString("id-ID", {
                     year: "numeric",
                     month: "long",
                     day: "numeric"
@@ -105,15 +121,20 @@ export function ProfilePage() {
             <h3 className="font-mono font-bold text-[10px] text-fg-muted tracking-[0.2em] uppercase select-none">01 // DOMAIN MATRIX PROGRESS</h3>
             
             <div className="space-y-4">
-              {categoriesProgress.some((c) => c.total > 0) ? (
-                categoriesProgress.map((progress) => {
-                  const percentage = progress.total > 0 ? (progress.solved / progress.total) * 100 : 0;
+              {category_breakdown && category_breakdown.length > 0 ? (
+                category_breakdown.map((progress) => {
+                  // We map percentage based on overall player points or just show a nice proportional block
+                  const percentage = points > 0 ? (progress.points / points) * 100 : 0;
                   
                   return (
                     <div key={progress.category} className="space-y-1.5">
                       <div className="flex justify-between items-center text-[10px] font-mono select-none">
-                        <span className="text-fg font-bold uppercase tracking-wider">{progress.title}</span>
-                        <span className="text-fg-muted font-bold">{progress.solved} / {progress.total} SOLVED ({percentage.toFixed(0)}%)</span>
+                        <span className="text-fg font-bold uppercase tracking-wider">
+                          {mapBackendCategoryToUI(progress.category)}
+                        </span>
+                        <span className="text-fg-muted font-bold">
+                          {progress.solves} {progress.solves === 1 ? 'solve' : 'solves'} ({progress.points} PTS)
+                        </span>
                       </div>
                       {/* Visual Progress Bar */}
                       <div className="w-full h-1.5 bg-bg border border-border-subtle overflow-hidden rounded-none select-none">
@@ -126,11 +147,58 @@ export function ProfilePage() {
                   );
                 })
               ) : (
-                <div className="text-center py-6 select-none font-mono text-[10px] text-fg-subtle">
-                  [!] NO ACTIVE CHALLENGES STAGED IN ARENA DB
+                <div className="text-center py-6 select-none font-mono text-[10px] text-fg-subtle flex flex-col items-center justify-center gap-2">
+                  <Layers className="h-5 w-5 text-fg-subtle/50 mb-1" />
+                  No category distribution data available.
                 </div>
               )}
             </div>
+          </div>
+
+          {/* SOLVED CHALLENGE HISTORY TABLE */}
+          <div className="p-6 bg-card-bg border border-border-ui space-y-4">
+            <h3 className="font-mono font-bold text-[10px] text-fg-muted tracking-[0.2em] uppercase select-none">
+              03 // SOLVED CHALLENGE HISTORY
+            </h3>
+            {solved_challenges && solved_challenges.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs font-mono">
+                  <thead>
+                    <tr className="border-b border-border-ui text-fg-subtle select-none text-[10px]">
+                      <th className="py-2.5 font-bold uppercase tracking-wider">Challenge</th>
+                      <th className="py-2.5 font-bold uppercase tracking-wider">Category</th>
+                      <th className="py-2.5 font-bold uppercase tracking-wider">Difficulty</th>
+                      <th className="py-2.5 font-bold uppercase tracking-wider">Points</th>
+                      <th className="py-2.5 font-bold uppercase tracking-wider">Solved At</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border-subtle">
+                    {solved_challenges.map((solve) => (
+                      <tr key={solve.challenge_id} className="hover:bg-surface/30 transition-colors">
+                        <td className="py-2.5 font-bold text-fg uppercase tracking-wide">{solve.title}</td>
+                        <td className="py-2.5 text-[#7B9FFF] font-bold uppercase">{mapBackendCategoryToUI(solve.category)}</td>
+                        <td className="py-2.5"><DifficultyBadge difficulty={solve.difficulty as any} /></td>
+                        <td className="py-2.5 text-cyber-cyan font-bold">+{solve.points} PTS</td>
+                        <td className="py-2.5 text-fg-muted">
+                          {new Date(solve.solved_at).toLocaleDateString("id-ID", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit"
+                          })}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="text-center py-8 select-none font-mono text-[10px] text-fg-subtle flex flex-col items-center justify-center gap-2">
+                <Trophy className="h-5 w-5 text-fg-subtle/50 mb-1" />
+                No solved challenges in history index.
+              </div>
+            )}
           </div>
 
         </div>
@@ -144,9 +212,9 @@ export function ProfilePage() {
             </h4>
             
             <div className="space-y-4 text-left">
-              {solvedChallenges.length > 0 ? (
-                solvedChallenges.map((solve) => (
-                  <div key={solve.id} className="border-l border-cyber-cyan/30 pl-3 py-0.5 space-y-1 select-text animate-fade-in">
+              {recent_solves && recent_solves.length > 0 ? (
+                recent_solves.map((solve) => (
+                  <div key={solve.challenge_id} className="border-l border-cyber-cyan/30 pl-3 py-0.5 space-y-1 select-text animate-fade-in">
                     <div className="font-mono text-[9px] text-[#7B9FFF] uppercase tracking-wider font-bold select-none">
                       {mapBackendCategoryToUI(solve.category)}
                     </div>
@@ -161,8 +229,7 @@ export function ProfilePage() {
                 ))
               ) : (
                 <div className="text-center py-12 select-none font-mono text-[10px] text-fg-subtle leading-relaxed pt-20">
-                  NO EXPLOITS REGISTERED YET.<br />
-                  ENTER CHALLENGES GRID ARCADES TO CAPTURE FLAGS.
+                  NO RECENT SOLVES RECORDED YET.
                 </div>
               )}
             </div>
