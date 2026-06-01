@@ -88,6 +88,13 @@ export function LoginPage() {
             autoComplete="current-password"
           />
 
+          <div className="flex justify-between items-center -mt-2 font-mono text-[9px] uppercase select-none">
+            <span />
+            <Link to="/forgot-password" className="text-fg-subtle hover:text-cyber-cyan transition-colors font-bold">
+              Forgot password?
+            </Link>
+          </div>
+
           <div className="pt-2">
             <Button type="submit" variant="primary" className="w-full py-3" disabled={isLoading}>
               {isLoading ? "ESTABLISHING TUNNEL..." : "Initialize Connection"}
