@@ -10,10 +10,10 @@ export function ScoreboardTable({ players }: ScoreboardTableProps) {
   const currentUser = useAuthStore((state) => state.user);
 
   return (
-    <div className="p-4 bg-[#0c0c0c] border border-white/[0.04] overflow-x-auto select-text">
+    <div className="p-4 bg-card-bg border border-border-ui overflow-x-auto select-text">
       <table className="w-full font-sans text-xs border-collapse min-w-[650px] text-left">
         <thead>
-          <tr className="border-b border-white/[0.04] font-mono text-[9px] text-slate-500 uppercase tracking-widest text-left select-none">
+          <tr className="border-b border-border-ui font-mono text-[9px] text-fg-subtle uppercase tracking-widest text-left select-none">
             <th className="py-3 px-4 font-bold">RANK ID</th>
             <th className="py-3 px-4 font-bold">TARGET COMPETITOR</th>
             <th className="py-3 px-4 font-bold">STAGING LAB AFFILIATION</th>
@@ -28,16 +28,16 @@ export function ScoreboardTable({ players }: ScoreboardTableProps) {
             return (
               <tr
                 key={player.user_id}
-                className={`border-b border-white/[0.03] font-mono hover:bg-white/[0.01] transition-colors ${
+                className={`border-b border-border-subtle font-mono hover:bg-surface/50 transition-colors ${
                   isSelf ? "bg-cyber-emerald/5 border-l-2 border-l-cyber-emerald" : ""
                 }`}
               >
-                <td className="py-3.5 px-4 font-bold text-slate-500">
+                <td className="py-3.5 px-4 font-bold text-fg-subtle">
                   # {player.rank < 10 ? `0${player.rank}` : player.rank}
                 </td>
                 <td className="py-3.5 px-4">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-200 uppercase tracking-wide">
+                    <span className="font-bold text-fg uppercase tracking-wide">
                       {player.name}
                     </span>
                     {isSelf && (
@@ -47,16 +47,16 @@ export function ScoreboardTable({ players }: ScoreboardTableProps) {
                     )}
                   </div>
                 </td>
-                <td className="py-3.5 px-4 text-slate-500 uppercase text-[9px] tracking-wider select-none">
+                <td className="py-3.5 px-4 text-fg-subtle uppercase text-[9px] tracking-wider select-none">
                   {isSelf ? "ACTIVE CONTEXT" : "INDIVIDUAL"}
                 </td>
-                <td className="py-3.5 px-4 text-center text-slate-300 font-bold select-none">
+                <td className="py-3.5 px-4 text-center text-fg-muted font-bold select-none">
                   {player.total_solves} solves
                 </td>
                 <td className="py-3.5 px-4 text-center text-[#7B9FFF] font-black select-none">
                   {player.total_points} pts
                 </td>
-                <td className="py-3.5 px-4 text-right text-slate-500 select-none font-bold">
+                <td className="py-3.5 px-4 text-right text-fg-subtle select-none font-bold">
                   {formatSolveTime(player.last_solve_time)}
                 </td>
               </tr>

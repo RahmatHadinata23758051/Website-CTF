@@ -29,27 +29,27 @@ export function ChallengeCard({ challenge }: ChallengeCardProps) {
 
         {/* Card Content */}
         <div className="space-y-1.5 flex-1 pt-1.5 text-left">
-          <div className="font-mono text-[9px] text-slate-600 font-bold tracking-wider uppercase">
+          <div className="font-mono text-[9px] text-fg-subtle font-bold tracking-wider uppercase">
             # {challenge.slug.replace(/-/g, "_").toUpperCase()}
           </div>
-          <h3 className="font-display font-bold text-[17px] text-slate-100 group-hover:text-cyber-cyan transition-colors leading-tight tracking-tight uppercase">
+          <h3 className="font-display font-bold text-[17px] text-fg group-hover:text-cyber-cyan transition-colors leading-tight tracking-tight uppercase">
             {challenge.title}
           </h3>
-          <p className="font-sans text-[12px] text-slate-400 group-hover:text-slate-350 transition-colors line-clamp-2 leading-relaxed">
+          <p className="font-sans text-[12px] text-fg-muted group-hover:text-fg transition-colors line-clamp-2 leading-relaxed">
             {challenge.description}
           </p>
         </div>
 
         {/* Card Footer */}
-        <div className="flex items-end justify-between border-t border-white/[0.04] pt-4 mt-3 select-none">
+        <div className="flex items-end justify-between border-t border-border-subtle pt-4 mt-3 select-none">
           <div className="font-mono text-left">
-            <div className="text-xl font-black text-slate-100 leading-none flex items-baseline gap-0.5">
+            <div className="text-xl font-black text-fg leading-none flex items-baseline gap-0.5">
               {challenge.points}
-              <span className="text-[9px] text-slate-500 tracking-widest font-bold font-sans uppercase">
+              <span className="text-[9px] text-fg-subtle tracking-widest font-bold font-sans uppercase">
                 PTS
               </span>
             </div>
-            <div className="text-[9px] text-slate-550 tracking-wider mt-1 uppercase">
+            <div className="text-[9px] text-fg-muted tracking-wider mt-1 uppercase">
               {challenge.solve_count !== undefined ? challenge.solve_count : 0} solves
             </div>
           </div>

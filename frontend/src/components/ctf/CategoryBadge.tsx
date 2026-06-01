@@ -14,7 +14,7 @@ export function CategoryBadge({ category }: { category: Category }) {
       case "Reverse Engineering":
         return "text-[#FF9F7B] border-[#FF9F7B]/15 bg-[#FF9F7B]/3";
       default:
-        return "text-slate-400 border-slate-800 bg-slate-900/10";
+        return "text-fg-muted border-border-ui bg-surface/50";
     }
   };
 

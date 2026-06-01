@@ -11,15 +11,15 @@ export function TerminalPanel() {
   }, []);
 
   return (
-    <div className="w-full max-w-[500px] bg-[#111111] border border-slate-700/80 text-left overflow-hidden shadow-2xl relative z-10 select-text">
+    <div className="w-full max-w-[500px] bg-elevated border border-border-strong text-left overflow-hidden shadow-2xl relative z-10 select-text">
       {/* Window Header */}
-      <div className="bg-[#161616] px-4 py-2.5 border-b border-white/[0.06] flex items-center justify-between">
+      <div className="bg-card-bg px-4 py-2.5 border-b border-border-ui flex items-center justify-between">
         <div className="flex gap-1.5 select-none">
           <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]"></div>
           <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]"></div>
           <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F]"></div>
         </div>
-        <span className="font-mono text-[10px] text-slate-500 select-none">operator@rblxsec — exploit-shell</span>
+        <span className="font-mono text-[10px] text-fg-subtle select-none">operator@rblxsec — exploit-shell</span>
         <span className="w-8"></span>
       </div>
 
@@ -31,18 +31,18 @@ export function TerminalPanel() {
         </div>
 
         {terminalLineIdx >= 1 && (
-          <div className="text-slate-400">[*] Connecting to 10.0.0.42:4444...</div>
+          <div className="text-fg-muted">[*] Connecting to 10.0.0.42:4444...</div>
         )}
         {terminalLineIdx >= 2 && (
-          <div className="text-slate-400">
+          <div className="text-fg-muted">
             [*] Leaked libc base: <span className="text-cyber-cyan font-mono font-bold">0x7f3c2a000000</span>
           </div>
         )}
         {terminalLineIdx >= 3 && (
-          <div className="text-slate-400">[*] ROP chain assembled (14 gadgets)</div>
+          <div className="text-fg-muted">[*] ROP chain assembled (14 gadgets)</div>
         )}
         {terminalLineIdx >= 4 && (
-          <div className="text-slate-400">[*] Triggering buffer overflow...</div>
+          <div className="text-fg-muted">[*] Triggering buffer overflow...</div>
         )}
         {terminalLineIdx >= 5 && (
           <div className="text-cyber-emerald font-semibold">[+] Shell obtained successfully!</div>
@@ -54,7 +54,7 @@ export function TerminalPanel() {
           </div>
         )}
         {terminalLineIdx >= 7 && (
-          <div className="text-slate-500 font-mono text-xs py-0.5 px-2 bg-slate-950 border border-white/[0.04] inline-block">
+          <div className="text-fg-subtle font-mono text-xs py-0.5 px-2 bg-bg border border-border-ui inline-block">
             [redacted] — submit through the challenge panel
           </div>
         )}

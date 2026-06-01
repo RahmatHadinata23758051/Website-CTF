@@ -12,7 +12,7 @@ export function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
       case "Insane":
         return "text-cyber-crimson border-cyber-crimson/30 bg-cyber-crimson/10";
       default:
-        return "text-slate-400 border-slate-700 bg-slate-900";
+        return "text-fg-muted border-border-strong bg-surface";
     }
   };
 
@@ -33,7 +33,7 @@ export function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
           <div
             key={dot}
             className={`w-1 h-1 rounded-full ${
-              dot <= filledDotsCount ? "bg-cyber-cyan" : "bg-slate-800"
+              dot <= filledDotsCount ? "bg-cyber-cyan" : "bg-border-strong"
             }`}
           />
         ))}

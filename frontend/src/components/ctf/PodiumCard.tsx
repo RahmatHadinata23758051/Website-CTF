@@ -29,13 +29,13 @@ export function PodiumCard({ player }: PodiumCardProps) {
   const getPodiumStyles = (rank: number) => {
     switch (rank) {
       case 1:
-        return "border-cyber-cyan bg-[#0d0d0d] shadow-[0_0_25px_rgba(200,255,0,0.03)]";
+        return "border-cyber-cyan bg-card-bg shadow-[0_0_25px_rgba(200,255,0,0.03)]";
       case 2:
-        return "border-white/[0.06] bg-[#0d0d0d]";
+        return "border-border-ui bg-card-bg";
       case 3:
-        return "border-[#FF9F7B]/30 bg-[#0d0d0d]";
+        return "border-[#FF9F7B]/30 bg-card-bg";
       default:
-        return "border-white/[0.04] bg-[#0d0d0d]";
+        return "border-border-subtle bg-card-bg";
     }
   };
 
@@ -48,7 +48,7 @@ export function PodiumCard({ player }: PodiumCardProps) {
       case 3:
         return "text-[#FF9F7B] border-[#FF9F7B]/20 bg-[#FF9F7B]/10";
       default:
-        return "text-slate-500 border-white/[0.04] bg-[#121212]";
+        return "text-fg-subtle border border-border-subtle bg-bg";
     }
   };
 
@@ -76,37 +76,37 @@ export function PodiumCard({ player }: PodiumCardProps) {
           </span>
 
           <div className="flex-grow min-w-0">
-            <h3 className="font-mono font-bold text-sm text-slate-100 flex items-center gap-1.5 truncate uppercase tracking-wider">
+            <h3 className="font-mono font-bold text-sm text-fg flex items-center gap-1.5 truncate uppercase tracking-wider">
               {player.name}
               {isSelf && <UserCheck className="h-3.5 w-3.5 text-cyber-emerald shrink-0" />}
             </h3>
-            <span className="font-mono text-[9px] text-slate-500 tracking-widest uppercase font-bold select-none">
+            <span className="font-mono text-[9px] text-fg-subtle tracking-widest uppercase font-bold select-none">
               {isSelf ? "ACTIVE SESSION" : "PARTICIPANT"}
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 border-t border-white/[0.04] pt-4 font-mono">
+        <div className="grid grid-cols-2 gap-4 border-t border-border-subtle pt-4 font-mono">
           <div>
-            <span className="text-[9px] text-slate-500 block uppercase tracking-wider font-bold select-none">
+            <span className="text-[9px] text-fg-subtle block uppercase tracking-wider font-bold select-none">
               ACCUMULATED
             </span>
-            <span className="text-base font-black text-slate-100 mt-1 block">
-              {player.total_points} <span className="text-[9px] text-slate-500 font-bold">PTS</span>
+            <span className="text-base font-black text-fg mt-1 block">
+              {player.total_points} <span className="text-[9px] text-fg-subtle font-bold">PTS</span>
             </span>
           </div>
           <div>
-            <span className="text-[9px] text-slate-500 block uppercase tracking-wider font-bold select-none">
+            <span className="text-[9px] text-fg-subtle block uppercase tracking-wider font-bold select-none">
               VECTOR CHECKS
             </span>
-            <span className="text-xs text-slate-300 mt-1 block font-bold">
+            <span className="text-xs text-fg-muted mt-1 block font-bold">
               {player.total_solves} solves
             </span>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-white/[0.03] pt-3 mt-4 text-[9px] font-mono uppercase tracking-wider text-slate-500 select-none">
+      <div className="flex items-center justify-between border-t border-border-subtle pt-3 mt-4 text-[9px] font-mono uppercase tracking-wider text-fg-subtle select-none">
         <span>LAST SIGNATURE SOLVE:</span>
         <span className="text-cyber-cyan font-bold">{formatSolveTime(player.last_solve_time)}</span>
       </div>

@@ -77,10 +77,10 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
   };
 
   return (
-    <div className="p-6 bg-[#0c0c0c] border border-white/[0.04] space-y-4">
+    <div className="p-6 bg-card-bg border border-border-ui space-y-4">
       {/* Box Header */}
-      <div className="flex items-center justify-between border-b border-white/[0.04] pb-3 select-none">
-        <span className="font-mono text-[10px] font-bold text-slate-400 flex items-center gap-2 uppercase tracking-[0.15em]">
+      <div className="flex items-center justify-between border-b border-border-ui pb-3 select-none">
+        <span className="font-mono text-[10px] font-bold text-fg-muted flex items-center gap-2 uppercase tracking-[0.15em]">
           <FolderLock className="h-4 w-4 text-cyber-cyan" />
           FLAG VALIDATOR CHECKSUM
         </span>
@@ -94,8 +94,8 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
         <div className="p-4 border border-cyber-emerald/20 bg-cyber-emerald/3 flex items-start gap-3.5 font-sans animate-fade-in text-left">
           <span className="text-cyber-emerald text-base font-bold select-none shrink-0 mt-0.5">✓</span>
           <div className="text-xs">
-            <p className="font-mono font-bold text-slate-100 uppercase tracking-wider">SOLVE VERIFIED</p>
-            <p className="text-slate-450 leading-relaxed mt-1">
+            <p className="font-mono font-bold text-fg uppercase tracking-wider">SOLVE VERIFIED</p>
+            <p className="text-fg-muted leading-relaxed mt-1">
               Excellent tracing sequence. Flag matched server configuration database. This challenge has been recorded as solved for your competitor signature.
             </p>
           </div>
@@ -104,13 +104,13 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
 
       {/* Authentication required banner block */}
       {!isAuthenticated ? (
-        <div className="p-5 bg-slate-950 border border-slate-850 flex flex-col items-center justify-center text-center space-y-4 py-8 animate-fade-in select-none">
+        <div className="p-5 bg-surface border border-border-ui flex flex-col items-center justify-center text-center space-y-4 py-8 animate-fade-in select-none">
           <div className="p-2.5 rounded-full bg-cyber-amber/5 border border-cyber-amber/15 text-cyber-amber">
             <ShieldAlert className="h-6 w-6" />
           </div>
           <div className="space-y-1.5 max-w-sm">
-            <h4 className="font-mono font-bold text-xs text-slate-200 uppercase tracking-wider">LOGIN REQUIRED</h4>
-            <p className="font-sans text-[11px] text-slate-500 leading-normal">
+            <h4 className="font-mono font-bold text-xs text-fg uppercase tracking-wider">LOGIN REQUIRED</h4>
+            <p className="font-sans text-[11px] text-fg-muted leading-normal">
               You must authenticate with a cryptographic signature before you can submit flag checksum vectors.
             </p>
           </div>
@@ -143,7 +143,7 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
                   if (localError) setLocalError(null);
                   if (feedback) setFeedback(null);
                 }}
-                className="w-full bg-[#121212] border border-white/[0.06] focus:border-cyber-cyan p-3 text-xs text-slate-100 font-mono focus:outline-none transition-all placeholder:text-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-input-bg border border-border-ui focus:border-cyber-cyan p-3 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
             
@@ -175,10 +175,10 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
           )}
 
           {/* Helpful standard subtext formats */}
-          <div className="flex items-center gap-1.5 font-mono text-[9px] text-slate-500 leading-normal flex-wrap select-none pt-1">
-            <HelpCircle className="h-3.5 w-3.5 text-slate-650 shrink-0" />
+          <div className="flex items-center gap-1.5 font-mono text-[9px] text-fg-subtle leading-normal flex-wrap select-none pt-1">
+            <HelpCircle className="h-3.5 w-3.5 text-fg-subtle shrink-0" />
             <span>SUBMISSION SIGNATURE FORMAT IS STRICTLY:</span>
-            <code className="text-cyber-cyan bg-[#121212] px-1 border border-white/[0.04] font-semibold">
+            <code className="text-cyber-cyan bg-bg px-1 border border-border-subtle font-semibold">
               iet{'{secret_key_parameters}'}
             </code>
           </div>

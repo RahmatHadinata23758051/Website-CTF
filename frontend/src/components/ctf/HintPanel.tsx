@@ -21,7 +21,7 @@ export function HintPanel({ slug }: HintPanelProps) {
 
   if (isLoading) {
     return (
-      <div className="p-6 bg-[#0c0c0c] border border-white/[0.04] flex items-center justify-center min-h-[140px]">
+      <div className="p-6 bg-card-bg border border-border-ui flex items-center justify-center min-h-[140px]">
         <LoadingSpinner />
       </div>
     );
@@ -29,7 +29,7 @@ export function HintPanel({ slug }: HintPanelProps) {
 
   if (error) {
     return (
-      <div className="p-6 bg-[#0c0c0c] border border-cyber-crimson/30">
+      <div className="p-6 bg-card-bg border border-cyber-crimson/30">
         <Alert variant="error" title="HINT MATRIX ERROR">
           Unable to synchronize hints from dynamic lab node. Check connections.
         </Alert>
@@ -38,13 +38,13 @@ export function HintPanel({ slug }: HintPanelProps) {
   }
 
   return (
-    <div className="p-6 bg-[#0c0c0c] border border-white/[0.04] space-y-4 select-text text-left">
-      <div className="flex items-center justify-between border-b border-white/[0.03] pb-3 select-none">
-        <div className="flex items-center gap-2 font-mono text-[10px] text-slate-400 tracking-[0.2em] uppercase font-bold">
+    <div className="p-6 bg-card-bg border border-border-ui space-y-4 select-text text-left">
+      <div className="flex items-center justify-between border-b border-border-subtle pb-3 select-none">
+        <div className="flex items-center gap-2 font-mono text-[10px] text-fg-muted tracking-[0.2em] uppercase font-bold">
           <Lightbulb className="h-4 w-4 text-cyber-cyan animate-pulse" />
           03 // Challenge Hints Standby ({hints.length})
         </div>
-        <span className="text-[8px] text-slate-650 font-mono uppercase tracking-widest bg-slate-950 px-2 py-0.5 border border-white/[0.02]">
+        <span className="text-[8px] text-fg-muted font-mono uppercase tracking-widest bg-bg px-2 py-0.5 border border-border-subtle">
           MVP MODE: FREE DECRYPT (0 PTS)
         </span>
       </div>
@@ -58,19 +58,19 @@ export function HintPanel({ slug }: HintPanelProps) {
                 key={hint.id}
                 className={`border transition-all duration-300 font-mono text-xs ${
                   isRevealed
-                    ? "border-cyber-cyan/30 bg-[#090909]"
-                    : "border-slate-850 bg-slate-950/20 hover:border-slate-800"
+                    ? "border-cyber-cyan/30 bg-bg"
+                    : "border-border-ui bg-surface/20 hover:border-border-strong"
                 }`}
               >
                 {/* Header Collapsible Trigger */}
                 <button
                   type="button"
                   onClick={() => toggleReveal(hint.id)}
-                  className="w-full p-3.5 flex items-center justify-between font-mono text-left cursor-pointer hover:bg-slate-900/10 transition-colors"
+                  className="w-full p-3.5 flex items-center justify-between font-mono text-left cursor-pointer hover:bg-surface/30 transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="text-slate-500 font-bold">HINT #{idx + 1}</span>
-                    <span className="text-[10px] text-slate-600">
+                    <span className="text-fg-muted font-bold">HINT #{idx + 1}</span>
+                    <span className="text-[10px] text-fg-subtle">
                       (Cost: {hint.cost} PTS — Free Unlock)
                     </span>
                   </div>
@@ -82,10 +82,10 @@ export function HintPanel({ slug }: HintPanelProps) {
 
                 {/* Collapsible Decrypted Content Area */}
                 {isRevealed && (
-                  <div className="p-4 pt-0 border-t border-dashed border-slate-850/60 font-sans text-slate-300 text-xs leading-relaxed animate-fade-in space-y-2">
-                    <p className="font-sans font-medium text-slate-200">{hint.content}</p>
-                    <div className="pt-2 border-t border-white/[0.02] flex items-center gap-1.5 font-mono text-[9px] text-slate-500 select-none">
-                      <HelpCircle className="h-3 w-3 text-slate-600" />
+                  <div className="p-4 pt-0 border-t border-dashed border-border-strong font-sans text-fg-muted text-xs leading-relaxed animate-fade-in space-y-2">
+                    <p className="font-sans font-medium text-fg">{hint.content}</p>
+                    <div className="pt-2 border-t border-border-subtle flex items-center gap-1.5 font-mono text-[9px] text-fg-subtle select-none">
+                      <HelpCircle className="h-3 w-3 text-fg-subtle" />
                       <span>Hints are configured to help you progress without directly exposing flag keys.</span>
                     </div>
                   </div>
@@ -95,10 +95,10 @@ export function HintPanel({ slug }: HintPanelProps) {
           })}
         </div>
       ) : (
-        <div className="py-6 flex flex-col items-center justify-center gap-2 text-center text-slate-500 border border-dashed border-slate-850/60 p-4 bg-slate-950/5 font-mono text-xs">
-          <AlertCircle className="h-5 w-5 text-slate-600 shrink-0" />
+        <div className="py-6 flex flex-col items-center justify-center gap-2 text-center text-fg-subtle border border-dashed border-border-strong p-4 bg-bg font-mono text-xs">
+          <AlertCircle className="h-5 w-5 text-fg-subtle shrink-0" />
           <div>
-            <span className="font-bold block uppercase tracking-wider text-slate-450">NO HINTS AVAILABLE</span>
+            <span className="font-bold block uppercase tracking-wider text-fg-muted">NO HINTS AVAILABLE</span>
             No guidance matrices have been provisioned for this trial vector.
           </div>
         </div>
