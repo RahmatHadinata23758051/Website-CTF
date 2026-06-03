@@ -18,6 +18,7 @@ import {
 } from "../../features/challenges/hintsHooks";
 import type { Hint, AdminHintRequest } from "../../features/challenges/hintsTypes";
 import { Button } from "../ui/Button";
+import { getErrorMessage } from "../../lib/error";
 
 interface AdminHintManagerProps {
   challengeId: string;
@@ -135,7 +136,7 @@ export function AdminHintManager({ challengeId, challengeTitle, onClose }: Admin
       }
       handleCancelForm();
     } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || "Failed to save hint";
+      const msg = getErrorMessage(err, "Failed to save hint");
       setFormError(msg);
     }
   };

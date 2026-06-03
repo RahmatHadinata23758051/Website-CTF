@@ -19,8 +19,10 @@ import {
   useAdminSubmissionStats
 } from "../../features/admin/submissions/hooks";
 import { Button } from "../../components/ui/Button";
-import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
-import { Alert } from "../../components/ui/Alert";
+import { ConnectionError } from "../../components/ui/ConnectionError";
+import { PageEmpty } from "../../components/ui/PageEmpty";
+import { InlineLoading } from "../../components/ui/InlineLoading";
+import { InlineError } from "../../components/ui/InlineError";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export function AdminMonitoringPage() {
@@ -169,9 +171,9 @@ export function AdminMonitoringPage() {
           ))}
         </div>
       ) : statsError || !stats ? (
-        <Alert variant="error" title="TELEMETRY OFFLINE">
-          Unable to synchronize dashboard statistics.
-        </Alert>
+        <div className="py-2">
+          <InlineError error={statsError} fallback="Unable to synchronize dashboard statistics." />
+        </div>
       ) : (
         <div className="space-y-6">
           {/* STATS CARDS GRID */}
@@ -418,17 +420,14 @@ export function AdminMonitoringPage() {
 
             {/* SUBMISSIONS LIST OPERATIONS TABLE */}
             {subsLoading ? (
-              <div className="py-16 flex items-center justify-center">
-                <LoadingSpinner />
-              </div>
+              <InlineLoading message="Retrieving submission history..." />
             ) : subsError || !subsData ? (
-              <Alert variant="error" title="CONNECTION REJECTED">
-                Unable to retrieve flag submission history log.
-              </Alert>
+              <ConnectionError onRetry={refetchSubs} message="Unable to retrieve flag submission history log." />
             ) : subsData.data.submissions.length === 0 ? (
-              <div className="py-16 border border-dashed border-border text-center text-xs font-mono text-fg-muted uppercase">
-                No flag submissions matching parameters found
-              </div>
+              <PageEmpty
+                title="NO ATTEMPTS RECORDED"
+                description={subSearch || subCorrect || subFrom || subTo ? "No submissions match current active filters." : "No competitor submissions have been registered yet."}
+              />
             ) : (
               <div className="space-y-4">
                 <div className="w-full overflow-x-auto border border-border rounded bg-card-bg">
@@ -591,17 +590,14 @@ export function AdminMonitoringPage() {
 
             {/* SOLVES LIST OPERATIONS TABLE */}
             {solvesLoading ? (
-              <div className="py-16 flex items-center justify-center">
-                <LoadingSpinner />
-              </div>
+              <InlineLoading message="Retrieving solve logs..." />
             ) : solvesError || !solvesData ? (
-              <Alert variant="error" title="CONNECTION REJECTED">
-                Unable to retrieve correct solves log.
-              </Alert>
+              <ConnectionError onRetry={refetchSolves} message="Unable to retrieve correct solves log." />
             ) : solvesData.data.solves.length === 0 ? (
-              <div className="py-16 border border-dashed border-border text-center text-xs font-mono text-fg-muted uppercase">
-                No solves matching parameters found
-              </div>
+              <PageEmpty
+                title="NO SOLVES RECORDED"
+                description={solveSearch || solveCategory || solveFrom || solveTo ? "No correct solves match current active filters." : "No correct solves have been registered in the database yet."}
+              />
             ) : (
               <div className="space-y-4">
                 <div className="w-full overflow-x-auto border border-border rounded bg-card-bg">

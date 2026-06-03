@@ -3,6 +3,8 @@ import { Button } from "../ui/Button";
 import { AlertCircle, X } from "lucide-react";
 import type { AdminUser } from "../../features/admin/users/types";
 
+import { getErrorMessage } from "../../lib/error";
+
 interface AdminUserBanDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -44,7 +46,7 @@ export function AdminUserBanDialog({ isOpen, onClose, user, onConfirm }: AdminUs
       await onConfirm(trimmedReason);
       onClose();
     } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || "Failed to ban user.";
+      const msg = getErrorMessage(err, "Failed to ban user.");
       setError(msg);
       setIsSubmitting(false);
     }

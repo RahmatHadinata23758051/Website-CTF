@@ -21,9 +21,11 @@ import {
   useDeleteAdminChallenge,
 } from "../features/challenges/adminHooks";
 import type { AdminChallenge, AdminChallengeRequest } from "../features/challenges/types";
-import { Alert } from "../components/ui/Alert";
 import { Button } from "../components/ui/Button";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { PageLoading } from "../components/ui/PageLoading";
+import { ConnectionError } from "../components/ui/ConnectionError";
+import { PageEmpty } from "../components/ui/PageEmpty";
+import { getErrorMessage } from "../lib/error";
 import { DifficultyBadge } from "../components/ctf/DifficultyBadge";
 import { CategoryBadge } from "../components/ctf/CategoryBadge";
 import { AdminAttachmentUpload } from "../components/admin/AdminAttachmentUpload";
@@ -40,6 +42,10 @@ interface FormState {
   attachment_url: string;
   external_link: string;
   is_active: boolean;
+  scoring_type: string;
+  initial_points: string;
+  minimum_points: string;
+  decay: string;
 }
 
 const initialFormState: FormState = {
@@ -53,6 +59,10 @@ const initialFormState: FormState = {
   attachment_url: "",
   external_link: "",
   is_active: true,
+  scoring_type: "static",
+  initial_points: "500",
+  minimum_points: "100",
+  decay: "100",
 };
 
 const categoriesList = [
@@ -69,7 +79,7 @@ const categoriesList = [
 const difficultiesList = ["Easy", "Medium", "Hard", "Insane"];
 
 export function AdminChallengesPage() {
-  const { data: challenges = [], isLoading, error } = useAdminChallenges();
+  const { data: challenges = [], isLoading, error, refetch } = useAdminChallenges();
 
   const createMutation = useCreateAdminChallenge();
   const updateStatusMutation = useUpdateAdminChallengeStatus();
@@ -118,6 +128,10 @@ export function AdminChallengesPage() {
       attachment_url: ch.attachment_url || "",
       external_link: ch.external_link || "",
       is_active: ch.is_active,
+      scoring_type: ch.scoring_type || "static",
+      initial_points: (ch.initial_points || 500).toString(),
+      minimum_points: (ch.minimum_points || 100).toString(),
+      decay: (ch.decay || 100).toString(),
     });
     setFormError(null);
     setIsModalOpen(true);
@@ -159,11 +173,46 @@ export function AdminChallengesPage() {
       setFormError("Description is required");
       return;
     }
-    const pts = parseInt(formData.points, 10);
-    if (isNaN(pts) || pts <= 0) {
-      setFormError("Points must be a positive integer");
-      return;
+
+    const isDynamic = formData.scoring_type === "dynamic";
+    let pts = 0;
+    let initialPts = 0;
+    let minPts = 0;
+    let dec = 0;
+
+    if (!isDynamic) {
+      pts = parseInt(formData.points, 10);
+      if (isNaN(pts) || pts <= 0) {
+        setFormError("Points must be a positive integer");
+        return;
+      }
+      initialPts = pts;
+      minPts = pts;
+      dec = 0;
+    } else {
+      initialPts = parseInt(formData.initial_points, 10);
+      minPts = parseInt(formData.minimum_points, 10);
+      dec = parseInt(formData.decay, 10);
+
+      if (isNaN(initialPts) || initialPts <= 0) {
+        setFormError("Initial Points must be a positive integer");
+        return;
+      }
+      if (isNaN(minPts) || minPts <= 0) {
+        setFormError("Minimum Points must be a positive integer");
+        return;
+      }
+      if (isNaN(dec) || dec <= 0) {
+        setFormError("Decay must be a positive integer");
+        return;
+      }
+      if (initialPts < minPts) {
+        setFormError("Initial Points must be greater than or equal to Minimum Points");
+        return;
+      }
+      pts = initialPts; // fallback for static compatibility
     }
+
     if (!editingChallenge && !formData.flag.trim()) {
       setFormError("Flag is required for new challenges");
       return;
@@ -180,6 +229,10 @@ export function AdminChallengesPage() {
       attachment_url: formData.attachment_url.trim() || null,
       external_link: formData.external_link.trim() || null,
       is_active: formData.is_active,
+      scoring_type: formData.scoring_type,
+      initial_points: initialPts,
+      minimum_points: minPts,
+      decay: dec,
     };
 
     try {
@@ -191,7 +244,7 @@ export function AdminChallengesPage() {
       setIsModalOpen(false);
       setFormData(initialFormState);
     } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || "Failed to save challenge";
+      const msg = getErrorMessage(err, "Failed to save challenge");
       setFormError(msg);
     }
   };
@@ -292,18 +345,12 @@ export function AdminChallengesPage() {
 
       {/* ERROR ALERT DISPLAY */}
       {error && (
-        <div className="py-2">
-          <Alert variant="error" title="CONNECTION REJECTED" className="max-w-full">
-            Unable to connect to administrative challenge endpoint. Check server configuration.
-          </Alert>
-        </div>
+        <ConnectionError onRetry={refetch} />
       )}
 
       {/* LOADING GRID */}
       {isLoading && (
-        <div className="w-full py-16 flex items-center justify-center">
-          <LoadingSpinner />
-        </div>
+        <PageLoading message="Synchronizing target templates..." />
       )}
 
       {/* ADMIN OPERATIONS TABLE */}
@@ -337,7 +384,7 @@ export function AdminChallengesPage() {
                         <CategoryBadge category={ch.category as any} />
                       </div>
                       <div className="text-[10px] text-fg-subtle font-mono tracking-tighter truncate max-w-md">
-                        slug: <span className="text-fg-muted">{ch.slug}</span>
+                        slug: <span className="text-fg-muted">{ch.slug}</span> | solves: <span className="text-cyber-cyan font-bold">{ch.solve_count || 0}</span>
                       </div>
                       <p className="text-[10px] text-fg-muted font-sans line-clamp-1 max-w-xl">
                         {ch.description}
@@ -351,9 +398,11 @@ export function AdminChallengesPage() {
                       </div>
                     </td>
 
-                    {/* Points Value */}
                     <td className="p-4 text-center font-bold text-cyber-cyan text-xs">
                       {ch.points}
+                      <span className="block text-[8px] text-fg-subtle font-mono font-normal uppercase tracking-wider mt-0.5">
+                        {ch.scoring_type}
+                      </span>
                     </td>
 
                     {/* Active Toggle Status Badge */}
@@ -445,8 +494,11 @@ export function AdminChallengesPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-fg-subtle font-mono">
-                    NO ADMINISTRATIVE TRIAL VECTORS RESOLVED
+                  <td colSpan={5} className="p-0">
+                    <PageEmpty
+                      title={challenges.length === 0 ? "NO TARGETS PROGRAMMED" : "NO TARGETS MATCH FILTER"}
+                      description={challenges.length === 0 ? "Add new trial vectors to populate the main lab board." : "Try adjusting your category search filters."}
+                    />
                   </td>
                 </tr>
               )}
@@ -487,35 +539,130 @@ export function AdminChallengesPage() {
                 </div>
               )}
 
-              {/* Title & Points Row */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-2 space-y-1">
-                  <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
-                    Challenge Title *
+              {/* Scoring Type Selector */}
+              <div className="space-y-1">
+                <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
+                  Scoring Type *
+                </label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-1.5 font-mono text-xs text-fg-muted cursor-pointer">
+                    <input
+                      type="radio"
+                      name="scoring_type"
+                      value="static"
+                      checked={formData.scoring_type === "static"}
+                      onChange={(e) => setFormData({ ...formData, scoring_type: e.target.value })}
+                      className="cursor-pointer accent-cyber-violet"
+                    />
+                    Static Points
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
-                    placeholder="e.g. SQLi Bypass 101"
-                  />
-                </div>
-                <div className="col-span-1 space-y-1">
-                  <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
-                    Points *
+                  <label className="flex items-center gap-1.5 font-mono text-xs text-fg-muted cursor-pointer">
+                    <input
+                      type="radio"
+                      name="scoring_type"
+                      value="dynamic"
+                      checked={formData.scoring_type === "dynamic"}
+                      onChange={(e) => setFormData({ ...formData, scoring_type: e.target.value })}
+                      className="cursor-pointer accent-cyber-violet"
+                    />
+                    Dynamic (Decay) Points
                   </label>
-                  <input
-                    type="number"
-                    min="1"
-                    required
-                    value={formData.points}
-                    onChange={(e) => setFormData({ ...formData, points: e.target.value })}
-                    className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
-                  />
                 </div>
+                <p className="text-[9px] text-fg-subtle font-mono mt-1">
+                  {formData.scoring_type === "dynamic"
+                    ? "Dynamic scoring recalculates challenge value based on valid solve count."
+                    : "Static challenge value never changes."}
+                </p>
               </div>
+
+              {/* Title & Points Row */}
+              {formData.scoring_type === "static" ? (
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="col-span-2 space-y-1">
+                    <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
+                      Challenge Title *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
+                      placeholder="e.g. SQLi Bypass 101"
+                    />
+                  </div>
+                  <div className="col-span-1 space-y-1">
+                    <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
+                      Points *
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      required
+                      value={formData.points}
+                      onChange={(e) => setFormData({ ...formData, points: e.target.value })}
+                      className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
+                      Challenge Title *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
+                      placeholder="e.g. SQLi Bypass 101"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-1">
+                      <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
+                        Initial Points *
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        required
+                        value={formData.initial_points}
+                        onChange={(e) => setFormData({ ...formData, initial_points: e.target.value })}
+                        className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
+                        Minimum Points *
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        required
+                        value={formData.minimum_points}
+                        onChange={(e) => setFormData({ ...formData, minimum_points: e.target.value })}
+                        className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-mono text-[9px] text-fg-subtle uppercase tracking-widest block font-bold">
+                        Decay Solves *
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        required
+                        value={formData.decay}
+                        onChange={(e) => setFormData({ ...formData, decay: e.target.value })}
+                        className="w-full bg-input-bg border border-border-ui hover:border-border-strong focus:border-cyber-violet rounded p-2 text-xs text-fg font-mono focus:outline-none transition-all placeholder:text-fg-subtle"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Slug Input */}
               <div className="space-y-1">

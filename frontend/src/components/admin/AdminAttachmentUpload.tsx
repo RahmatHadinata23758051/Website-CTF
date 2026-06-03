@@ -1,6 +1,7 @@
 import React from "react";
 import { UploadCloud, File, Trash2, Loader2, AlertCircle } from "lucide-react";
 import { useUploadChallengeAttachment } from "../../features/admin/uploads/hooks";
+import { getErrorMessage } from "../../lib/error";
 
 interface AdminAttachmentUploadProps {
   value: string;
@@ -54,7 +55,7 @@ export function AdminAttachmentUpload({ value, onChange }: AdminAttachmentUpload
       const attachmentUrl = await uploadMutation.mutateAsync(file);
       onChange(attachmentUrl);
     } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || "Failed to upload file to backend";
+      const msg = getErrorMessage(err, "Failed to upload file to backend");
       setError(msg);
     }
   };

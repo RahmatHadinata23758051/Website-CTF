@@ -3,6 +3,8 @@ import { Button } from "../ui/Button";
 import { AlertTriangle, X } from "lucide-react";
 import type { AdminUser } from "../../features/admin/users/types";
 
+import { getErrorMessage } from "../../lib/error";
+
 interface AdminUserRoleDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -39,7 +41,7 @@ export function AdminUserRoleDialog({ isOpen, onClose, user, onConfirm }: AdminU
       await onConfirm(role);
       onClose();
     } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || "Failed to update role.";
+      const msg = getErrorMessage(err, "Failed to update role.");
       setError(msg);
       setIsSubmitting(false);
     }

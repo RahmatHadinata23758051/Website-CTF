@@ -6,8 +6,10 @@ import { AdminUserTable } from "../../components/admin/AdminUserTable";
 import { AdminUserBanDialog } from "../../components/admin/AdminUserBanDialog";
 import { AdminUserRoleDialog } from "../../components/admin/AdminUserRoleDialog";
 import { Button } from "../../components/ui/Button";
-import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
-import { Alert } from "../../components/ui/Alert";
+import { PageLoading } from "../../components/ui/PageLoading";
+import { ConnectionError } from "../../components/ui/ConnectionError";
+import { PageEmpty } from "../../components/ui/PageEmpty";
+import { getErrorMessage } from "../../lib/error";
 
 export function AdminUsersPage() {
   // Query filters
@@ -33,7 +35,7 @@ export function AdminUsersPage() {
     return () => clearTimeout(handler);
   }, [searchVal]);
 
-  const { data, isLoading, error } = useAdminUsers({
+  const { data, isLoading, error, refetch } = useAdminUsers({
     search: debouncedSearch || undefined,
     role: selectedRole || undefined,
     status: selectedStatus || undefined,
@@ -60,7 +62,7 @@ export function AdminUsersPage() {
       try {
         await unbanMutation.mutateAsync(user.id);
       } catch (err: any) {
-        alert(err?.response?.data?.message || err?.message || "Failed to unban user");
+        alert(getErrorMessage(err, "Failed to unban user"));
       }
     }
   };
@@ -183,29 +185,30 @@ export function AdminUsersPage() {
 
       {/* ERROR ALERT DISPLAY */}
       {error && (
-        <div className="py-2">
-          <Alert variant="error" title="CONNECTION REJECTED" className="max-w-full">
-            Unable to connect to administrative user endpoints. Please check backend config.
-          </Alert>
-        </div>
+        <ConnectionError onRetry={refetch} />
       )}
 
       {/* LOADING GRID */}
       {isLoading && (
-        <div className="w-full py-16 flex items-center justify-center">
-          <LoadingSpinner />
-        </div>
+        <PageLoading message="Synchronizing registered operator database..." />
       )}
 
       {/* USER LIST OPERATIONS TABLE */}
       {!isLoading && !error && data && (
         <div className="space-y-4">
-          <AdminUserTable
-            users={data.data.users}
-            onRoleChangeClick={handleRoleChangeClick}
-            onBanClick={handleBanClick}
-            onUnbanClick={handleUnbanClick}
-          />
+          {data.data.users.length > 0 ? (
+            <AdminUserTable
+              users={data.data.users}
+              onRoleChangeClick={handleRoleChangeClick}
+              onBanClick={handleBanClick}
+              onUnbanClick={handleUnbanClick}
+            />
+          ) : (
+            <PageEmpty
+              title={hasActiveFilters ? "NO ACCOUNTS RESOLVED" : "NO ACCOUNTS REGISTERED"}
+              description={hasActiveFilters ? "Try adjusting your search query filters." : "No competitor accounts have registered yet."}
+            />
+          )}
 
           {/* Pagination controls */}
           {data.data.pagination.total_pages > 1 && (
