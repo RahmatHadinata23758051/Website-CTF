@@ -13,5 +13,9 @@ func SetupProfileRoutes(router fiber.Router, cfg *config.Config) {
 	handler := handlers.NewProfileHandler()
 
 	// Authenticated profile route
-	router.Get("/profile/summary", middleware.RequireAuth(cfg), handler.GetProfileSummary)
+	router.Get("/profile/summary",
+		middleware.RequireAuth(cfg),
+		middleware.RequireAcceptedRules(),
+		handler.GetProfileSummary,
+	)
 }

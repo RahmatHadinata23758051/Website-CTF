@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"time"
+
 	"ctf-platform/backend/internal/config"
 	"ctf-platform/backend/internal/handlers"
 	"ctf-platform/backend/internal/middleware"
@@ -12,6 +14,12 @@ import (
 func SetupSubmissionRoutes(router fiber.Router, cfg *config.Config) {
 	handler := handlers.NewSubmissionHandler(cfg)
 
-	// Flag submissions require full JWT validation.
-	router.Post("/challenges/:slug/submit", middleware.RequireAuth(cfg), handler.SubmitFlag)
+	router.Post("/challenges/:slug/submit",
+		middleware.RequireAuth(cfg),
+		middleware.RequireAcceptedRules(),
+		middleware.RateLimitSubmit(10, time.Minute),
+		middleware.RateLimitSubmit(30, 10*time.Minute),
+		handler.SubmitFlag,
+	)
 }
+

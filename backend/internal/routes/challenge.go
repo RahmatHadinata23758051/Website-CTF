@@ -12,10 +12,11 @@ import (
 func SetupChallengeRoutes(router fiber.Router, cfg *config.Config) {
 	handler := handlers.NewChallengeHandler()
 
-	challenges := router.Group("/challenges")
+	challenges := router.Group("/challenges",
+		middleware.RequireAuth(cfg),
+		middleware.RequireAcceptedRules(),
+	)
 
-	// Apply OptionalAuth so logged-in users get solved check calculated.
-	// Browsing remains completely public for unregistered visitors.
-	challenges.Get("/", middleware.OptionalAuth(cfg), handler.GetChallenges)
-	challenges.Get("/:slug", middleware.OptionalAuth(cfg), handler.GetChallengeBySlug)
+	challenges.Get("/", handler.GetChallenges)
+	challenges.Get("/:slug", handler.GetChallengeBySlug)
 }

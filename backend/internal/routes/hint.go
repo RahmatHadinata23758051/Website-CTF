@@ -3,6 +3,7 @@ package routes
 import (
 	"ctf-platform/backend/internal/config"
 	"ctf-platform/backend/internal/handlers"
+	"ctf-platform/backend/internal/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -11,6 +12,9 @@ import (
 func SetupHintRoutes(router fiber.Router, cfg *config.Config) {
 	hintHandler := handlers.NewHintHandler()
 
-	// Public challenges details hints retrieval
-	router.Get("/challenges/:slug/hints", hintHandler.GetPublicHints)
+	router.Get("/challenges/:slug/hints",
+		middleware.RequireAuth(cfg),
+		middleware.RequireAcceptedRules(),
+		hintHandler.GetPublicHints,
+	)
 }
