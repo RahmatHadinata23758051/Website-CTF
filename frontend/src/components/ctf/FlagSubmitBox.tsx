@@ -5,6 +5,7 @@ import { Alert } from "../ui/Alert";
 import { Button } from "../ui/Button";
 import { useAuthStore } from "../../stores/authStore";
 import { useSubmitFlag } from "../../features/challenges/hooks";
+import { getErrorMessage } from "../../lib/error";
 
 interface FlagSubmitBoxProps {
   slug: string;
@@ -67,7 +68,7 @@ export function FlagSubmitBox({ slug, isSolved }: FlagSubmitBoxProps) {
         }
       },
       onError: (err: any) => {
-        const errMsg = err.response?.data?.message || "TRANSACTION FAILURE: Backend node unresponsive.";
+        const errMsg = getErrorMessage(err, "TRANSACTION FAILURE: Backend node unresponsive.");
         setFeedback({
           text: errMsg,
           type: "error",

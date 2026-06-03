@@ -1,8 +1,8 @@
 import React from "react";
 import { Lightbulb, ChevronDown, ChevronUp, AlertCircle, HelpCircle } from "lucide-react";
 import { usePublicHints } from "../../features/challenges/hintsHooks";
-import { LoadingSpinner } from "../ui/LoadingSpinner";
-import { Alert } from "../ui/Alert";
+import { InlineLoading } from "../ui/InlineLoading";
+import { InlineError } from "../ui/InlineError";
 
 interface HintPanelProps {
   slug: string;
@@ -22,7 +22,7 @@ export function HintPanel({ slug }: HintPanelProps) {
   if (isLoading) {
     return (
       <div className="p-6 bg-card-bg border border-border-ui flex items-center justify-center min-h-[140px]">
-        <LoadingSpinner />
+        <InlineLoading message="Synchronizing hints..." />
       </div>
     );
   }
@@ -30,9 +30,7 @@ export function HintPanel({ slug }: HintPanelProps) {
   if (error) {
     return (
       <div className="p-6 bg-card-bg border border-cyber-crimson/30">
-        <Alert variant="error" title="HINT MATRIX ERROR">
-          Unable to synchronize hints from dynamic lab node. Check connections.
-        </Alert>
+        <InlineError error={error} fallback="Unable to synchronize hints from dynamic lab node. Check connections." />
       </div>
     );
   }

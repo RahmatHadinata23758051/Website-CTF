@@ -9,7 +9,11 @@ export interface Challenge {
   points: number;
   is_solved: boolean;
   description: string;
-  solve_count?: number;
+  solve_count: number;
+  scoring_type: string;
+  initial_points: number;
+  minimum_points: number;
+  decay: number;
 }
 
 export interface ChallengeListResponse {
@@ -34,9 +38,14 @@ export interface ChallengeDetail {
   category: Category | string;
   difficulty: Difficulty;
   points: number;
+  solve_count: number;
   attachment_url: string | null;
   external_link: string | null;
   is_solved: boolean;
+  scoring_type: string;
+  initial_points: number;
+  minimum_points: number;
+  decay: number;
   created_at: string;
   updated_at: string;
 }
@@ -70,6 +79,11 @@ export interface AdminChallenge {
   attachment_url: string | null;
   external_link: string | null;
   is_active: boolean;
+  scoring_type: string;
+  initial_points: number;
+  minimum_points: number;
+  decay: number;
+  solve_count: number;
   created_at: string;
   updated_at: string;
 }
@@ -101,5 +115,9 @@ export interface AdminChallengeRequest {
   attachment_url: string | null;
   external_link: string | null;
   is_active: boolean;
+  scoring_type: string;
+  initial_points: number;
+  minimum_points: number;
+  decay: number;
 }
 

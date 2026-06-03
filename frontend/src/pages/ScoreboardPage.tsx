@@ -2,14 +2,14 @@ import { Trophy, Crown, Users, Target } from "lucide-react";
 import { useScoreboard } from "../features/scoreboard/hooks";
 import { PodiumCard } from "../components/ctf/PodiumCard";
 import { ScoreboardTable } from "../components/ctf/ScoreboardTable";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
-import { Alert } from "../components/ui/Alert";
-import { EmptyState } from "../components/ui/EmptyState";
+import { PageLoading } from "../components/ui/PageLoading";
+import { ConnectionError } from "../components/ui/ConnectionError";
+import { PageEmpty } from "../components/ui/PageEmpty";
 import { LeaderboardProgressionChart } from "../components/ctf/LeaderboardProgressionChart";
 import type { ScoreboardUser } from "../features/scoreboard/types";
 
 export function ScoreboardPage() {
-  const { data, isLoading, error } = useScoreboard();
+  const { data, isLoading, error, refetch } = useScoreboard();
 
   const scoreboardList = data?.data?.scoreboard || [];
 
@@ -69,28 +69,20 @@ export function ScoreboardPage() {
 
       {/* ERROR ALERT DISPLAY */}
       {error && (
-        <div className="py-4 text-left">
-          <Alert variant="error" title="SYNCHRONIZATION ERROR">
-            Unable to synchronize scoreboard. Check backend connection.
-          </Alert>
-        </div>
+        <ConnectionError onRetry={refetch} />
       )}
 
       {/* LOADING STATE DISPLAY */}
       {isLoading && (
-        <div className="w-full py-20 flex items-center justify-center select-none">
-          <LoadingSpinner />
-        </div>
+        <PageLoading message="Synchronizing scoreboard..." />
       )}
 
       {/* EMPTY STATE DISPLAY */}
       {!isLoading && !error && scoreboardList.length === 0 && (
-        <div className="py-8">
-          <EmptyState 
-            title="NO SOLVES RECORDED" 
-            description="No solves recorded yet. Be the first to capture a target vector!"
-          />
-        </div>
+        <PageEmpty 
+          title="NO SOLVES RECORDED" 
+          description="No solves recorded yet. Be the first to capture a target vector!"
+        />
       )}
 
       {/* RENDER VIEWPORTS */}

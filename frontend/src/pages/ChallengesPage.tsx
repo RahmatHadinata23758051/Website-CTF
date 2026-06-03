@@ -2,8 +2,8 @@ import React from "react";
 import { Search, SlidersHorizontal, FolderOpen } from "lucide-react";
 import type { Difficulty, Category } from "../types";
 import { EmptyState } from "../components/ui/EmptyState";
-import { Alert } from "../components/ui/Alert";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { PageLoading } from "../components/ui/PageLoading";
+import { ConnectionError } from "../components/ui/ConnectionError";
 import { ChallengeCard } from "../components/ctf/ChallengeCard";
 import { useChallenges } from "../features/challenges/hooks";
 import { useAuthStore } from "../stores/authStore";
@@ -16,7 +16,7 @@ export function ChallengesPage() {
   const [selectedStatus, setSelectedStatus] = React.useState<"All" | "Solved" | "Unsolved">("All");
 
   // Fetch challenges dynamically using TanStack Query
-  const { data, isLoading, error } = useChallenges({
+  const { data, isLoading, error, refetch } = useChallenges({
     search: searchQuery,
     category: selectedCategory,
     difficulty: selectedDifficulty,
@@ -203,20 +203,14 @@ export function ChallengesPage() {
             <span className="uppercase tracking-wider font-bold">ORDER: POINT VALUE ASCENDING</span>
           </div>
 
-          {/* ERROR ALERT DISPLAY */}
-          {error && (
-            <div className="py-6">
-              <Alert variant="error" title="SYNCHRONIZATION ERROR" className="max-w-full">
-                Unable to synchronize challenge grid. Check backend connection.
-              </Alert>
-            </div>
-          )}
-
           {/* LOADING STATE DISPLAY */}
           {isLoading && (
-            <div className="w-full py-16 flex items-center justify-center">
-              <LoadingSpinner />
-            </div>
+            <PageLoading message="Synchronizing target catalog..." />
+          )}
+
+          {/* ERROR ALERT DISPLAY */}
+          {error && !isLoading && (
+            <ConnectionError onRetry={refetch} />
           )}
 
           {/* CHALLENGES MATRIX BOARD */}

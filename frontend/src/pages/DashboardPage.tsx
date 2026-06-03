@@ -4,7 +4,12 @@ import { TerminalPanel } from "../components/ctf/TerminalPanel";
 import { Card } from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Button } from "../components/ui/Button";
+import { RecentActivityFeed } from "../components/ctf/RecentActivityFeed";
 import { useOverviewStats } from "../features/stats/hooks";
+import { useAuthStore } from "../stores/authStore";
+import { PageLoading } from "../components/ui/PageLoading";
+import { ConnectionError } from "../components/ui/ConnectionError";
+import { EmptyState } from "../components/ui/EmptyState";
 
 const categoryMetaMap: Record<string, { title: string; desc: string; marker: string }> = {
   "Web": { title: "Web Exploitation", desc: "Audit JWT protocols, prototype corruption, and parameter injection.", marker: "WEB" },
@@ -18,7 +23,17 @@ const categoryMetaMap: Record<string, { title: string; desc: string; marker: str
 };
 
 export function DashboardPage() {
-  const { data: statsRes } = useOverviewStats();
+  const { data: statsRes, isLoading, isError, refetch } = useOverviewStats();
+  const { isAuthenticated } = useAuthStore();
+
+  if (isLoading) {
+    return <PageLoading message="Initializing RBLXSec lab..." />;
+  }
+
+  if (isError) {
+    return <ConnectionError onRetry={refetch} />;
+  }
+
   const stats = statsRes?.data;
 
   const totalChallenges = stats?.total_challenges ?? 0;
@@ -146,18 +161,35 @@ export function DashboardPage() {
             ))}
           </div>
         ) : (
-          <div className="p-8 bg-[#0c0c0c] border border-white/[0.04] text-center select-none py-12">
-            <p className="font-mono text-[10px] text-slate-500 uppercase tracking-widest">
-              [!] NO ACTIVE CHALLENGE CATEGORIES AVAILABLE YET
-            </p>
-          </div>
+          <EmptyState
+            title="No Active Categories"
+            description="The security lab index does not contain any active challenge categories yet."
+          />
         )}
       </div>
+
+      {/* ─── RECENT ACTIVITY FEED ─── */}
+      {isAuthenticated && (
+        <div className="space-y-8">
+          <SectionHeader
+            index="03"
+            title="RECENT ACTIVITY"
+            description="Live solve events from registered competitors across all challenge categories."
+            aside={
+              <Link to="/users" className="text-cyber-cyan hover:text-slate-200 font-mono text-[10px] uppercase tracking-widest flex items-center gap-1 font-bold select-none">
+                View All Players
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            }
+          />
+          <RecentActivityFeed limit={8} />
+        </div>
+      )}
 
       {/* ─── LAB PROGRESSION WORKFLOW ─── */}
       <div className="space-y-8">
         <SectionHeader
-          index="03"
+          index="04"
           title="LAB PROGRESSION WORKFLOW"
           description="A straightforward process optimized to reduce distraction and make flag capturing simple."
         />
@@ -180,31 +212,33 @@ export function DashboardPage() {
       </div>
 
       {/* ─── CALL TO ACTION ─── */}
-      <div className="p-8 md:p-12 bg-[#111111] border border-white/[0.04] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 text-left select-none">
-        <div className="absolute inset-0 bg-dot-matrix opacity-10 pointer-events-none"></div>
-        
-        <div className="space-y-2 relative z-10 max-w-xl">
-          <h3 className="font-display font-bold text-2xl md:text-3xl text-slate-100 uppercase tracking-tight">
-            Begin your challenges now.
-          </h3>
-          <p className="font-sans text-xs md:text-sm text-slate-500 leading-relaxed">
-            Log in to preserve your progress, track your stats curve, and update your scoreboard rank in real time.
-          </p>
+      {!isAuthenticated && (
+        <div className="p-8 md:p-12 bg-[#111111] border border-white/[0.04] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 text-left select-none">
+          <div className="absolute inset-0 bg-dot-matrix opacity-10 pointer-events-none"></div>
+          
+          <div className="space-y-2 relative z-10 max-w-xl">
+            <h3 className="font-display font-bold text-2xl md:text-3xl text-slate-100 uppercase tracking-tight">
+              Begin your challenges now.
+            </h3>
+            <p className="font-sans text-xs md:text-sm text-slate-500 leading-relaxed">
+              Log in to preserve your progress, track your stats curve, and update your scoreboard rank in real time.
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto relative z-10 shrink-0">
+            <Link to="/challenges">
+              <Button variant="primary" className="w-full py-3.5 px-6">
+                Enter Challenges
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button variant="secondary" className="w-full py-3.5 px-6">
+                Create Account
+              </Button>
+            </Link>
+          </div>
         </div>
-        
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto relative z-10 shrink-0">
-          <Link to="/challenges">
-            <Button variant="primary" className="w-full py-3.5 px-6">
-              Enter Challenges
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button variant="secondary" className="w-full py-3.5 px-6">
-              Create Account
-            </Button>
-          </Link>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

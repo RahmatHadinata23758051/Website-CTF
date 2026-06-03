@@ -49,8 +49,13 @@ export function ChallengeCard({ challenge }: ChallengeCardProps) {
                 PTS
               </span>
             </div>
-            <div className="text-[9px] text-fg-muted tracking-wider mt-1 uppercase">
-              {challenge.solve_count !== undefined ? challenge.solve_count : 0} solves
+            <div className="text-[9px] text-fg-muted tracking-wider mt-1 uppercase flex items-center gap-1.5">
+              <span>{challenge.solve_count !== undefined ? challenge.solve_count : 0} solves</span>
+              {challenge.scoring_type === "dynamic" && (
+                <span className="px-1.5 py-0.2 border border-cyber-cyan/25 bg-cyber-cyan/5 text-cyber-cyan text-[7px] font-bold tracking-widest rounded-sm">
+                  DYNAMIC
+                </span>
+              )}
             </div>
           </div>
 

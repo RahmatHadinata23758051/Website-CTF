@@ -6,17 +6,17 @@ import {
   ExternalLink, 
   Paperclip
 } from "lucide-react";
-import { Button } from "../components/ui/Button";
-import { Alert } from "../components/ui/Alert";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { useChallengeDetail } from "../features/challenges/hooks";
+import { mapBackendCategoryToUI } from "../features/challenges/api";
+import type { Category } from "../types";
+import { PageLoading } from "../components/ui/PageLoading";
+import { ConnectionError } from "../components/ui/ConnectionError";
+import { NotFoundPage } from "./system/NotFoundPage";
 import { CategoryBadge } from "../components/ctf/CategoryBadge";
 import { DifficultyBadge } from "../components/ctf/DifficultyBadge";
 import { ChallengeMeta } from "../components/ctf/ChallengeMeta";
 import { FlagSubmitBox } from "../components/ctf/FlagSubmitBox";
 import { HintPanel } from "../components/ctf/HintPanel";
-import { useChallengeDetail } from "../features/challenges/hooks";
-import { mapBackendCategoryToUI } from "../features/challenges/api";
-import type { Category } from "../types";
 
 function getFullAttachmentUrl(attachmentUrl: string | null): string {
   if (!attachmentUrl) return "";
@@ -38,59 +38,31 @@ export function ChallengeDetailPage() {
   const { slug } = useParams<{ slug: string }>();
 
   // Fetch real challenge details from backend
-  const { data, isLoading, error } = useChallengeDetail(slug || "");
+  const { data, isLoading, error, refetch } = useChallengeDetail(slug || "");
 
   const challenge = data?.data?.challenge;
 
   const [copiedCode, setCopiedCode] = React.useState(false);
 
-  React.useEffect(() => {
+  const [prevSlug, setPrevSlug] = React.useState(slug);
+  if (prevSlug !== slug) {
+    setPrevSlug(slug);
     setCopiedCode(false);
-  }, [slug]);
+  }
 
   // Loading State Display
   if (isLoading) {
-    return (
-      <div className="w-full min-h-[calc(100vh-160px)] flex flex-col items-center justify-center py-16 select-none">
-        <LoadingSpinner />
-      </div>
-    );
+    return <PageLoading message="Synchronizing target workstation..." />;
   }
 
   // Backend Connection Error Display
   if (error) {
-    return (
-      <div className="py-16 text-center max-w-lg mx-auto space-y-6">
-        <div className="max-w-full text-left">
-          <Alert variant="error" title="SYNCHRONIZATION ERROR">
-            Unable to synchronize challenge detail matrix. Check backend connection.
-          </Alert>
-        </div>
-        <Link to="/challenges">
-          <Button variant="secondary" className="w-full py-2.5">
-            Back to Challenges Catalog
-          </Button>
-        </Link>
-      </div>
-    );
+    return <ConnectionError onRetry={refetch} />;
   }
 
   // Not Found State Display
   if (!challenge) {
-    return (
-      <div className="py-16 text-center max-w-lg mx-auto space-y-6">
-        <div className="max-w-full text-left">
-          <Alert variant="error" title="CRITICAL: LINK FAILURE">
-            The requested challenge vector reference could not be located in our active indexes.
-          </Alert>
-        </div>
-        <Link to="/challenges">
-          <Button variant="secondary" className="w-full py-2.5">
-            Back to Challenges Catalog
-          </Button>
-        </Link>
-      </div>
-    );
+    return <NotFoundPage />;
   }
 
   // Dynamic values
@@ -130,7 +102,12 @@ export function ChallengeDetailPage() {
                 <DifficultyBadge difficulty={challenge.difficulty} />
               </div>
 
-              <div className="font-mono text-[10px] text-fg-subtle tracking-widest uppercase font-bold">
+              <div className="font-mono text-[10px] text-fg-subtle tracking-widest uppercase font-bold flex items-center gap-1.5">
+                {challenge.scoring_type === "dynamic" && (
+                  <span className="px-1.5 py-0.5 border border-cyber-cyan/35 bg-cyber-cyan/5 text-cyber-cyan text-[8px] font-bold tracking-widest rounded-sm">
+                    DYNAMIC
+                  </span>
+                )}
                 VALUE: <span className={`font-black ${challenge.is_solved ? "text-fg-subtle line-through" : "text-cyber-cyan"}`}>{challenge.points} PTS</span>
               </div>
             </div>
@@ -143,8 +120,8 @@ export function ChallengeDetailPage() {
               </h1>
             </div>
 
-            {/* Render with custom, beautiful placeholder values inside metadata */}
-            <ChallengeMeta author="RBLXSec_Lab" solveCount={challenge.points > 200 ? 5 : 23} />
+            {/* Render challenge metadata with real solve count */}
+            <ChallengeMeta author="RBLXSec_Lab" solveCount={challenge.solve_count ?? 0} />
           </div>
 
           {/* SPECIFICATION DESCRIPTION */}
@@ -264,12 +241,34 @@ export function ChallengeDetailPage() {
                 <span className="font-bold">{challenge.difficulty}</span>
               </div>
               <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
-                <span className="text-fg-subtle">BASE VALUE:</span>
+                <span className="text-fg-subtle">SCORING TYPE:</span>
+                <span className={`font-bold uppercase ${challenge.scoring_type === "dynamic" ? "text-cyber-cyan" : "text-fg"}`}>
+                  {challenge.scoring_type || "static"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
+                <span className="text-fg-subtle">CURRENT VALUE:</span>
                 <span className="text-cyber-cyan font-bold">{challenge.points} PTS</span>
               </div>
+              {challenge.scoring_type === "dynamic" && (
+                <>
+                  <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
+                    <span className="text-fg-subtle">INITIAL VALUE:</span>
+                    <span className="text-fg font-bold">{challenge.initial_points} PTS</span>
+                  </div>
+                  <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
+                    <span className="text-fg-subtle">MINIMUM VALUE:</span>
+                    <span className="text-fg font-bold">{challenge.minimum_points} PTS</span>
+                  </div>
+                  <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
+                    <span className="text-fg-subtle">DECAY THRESHOLD:</span>
+                    <span className="text-fg font-bold">{challenge.decay} SOLVES</span>
+                  </div>
+                </>
+              )}
               <div className="flex justify-between items-center">
-                <span className="text-fg-subtle">SOLVE RATIO:</span>
-                <span className="text-cyber-emerald font-bold">{challenge.points > 200 ? "12% RATE" : "48% RATE"}</span>
+                <span className="text-fg-subtle">SOLVED BY:</span>
+                <span className="text-cyber-emerald font-bold">{challenge.solve_count ?? 0} {(challenge.solve_count ?? 0) === 1 ? 'PLAYER' : 'PLAYERS'}</span>
               </div>
             </div>
           </div>

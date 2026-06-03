@@ -6,7 +6,7 @@ interface PodiumCardProps {
   player: ScoreboardUser;
 }
 
-export function formatSolveTime(timeStr: string | null): string {
+function formatSolveTime(timeStr: string | null): string {
   if (!timeStr) return "-";
   try {
     const d = new Date(timeStr);
