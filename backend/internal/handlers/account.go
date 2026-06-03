@@ -88,3 +88,28 @@ func (h *AccountHandler) ChangePassword(c *fiber.Ctx) error {
 
 	return utils.SendSuccess(c, "Password changed successfully", nil)
 }
+
+// AcceptRules handles POST /api/account/accept-rules
+func (h *AccountHandler) AcceptRules(c *fiber.Ctx) error {
+	userIDStr, ok := c.Locals("user_id").(string)
+	if !ok {
+		return utils.SendError(c, "Missing or invalid authorization token", fiber.StatusUnauthorized)
+	}
+
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		return utils.SendError(c, "Missing or invalid authorization token", fiber.StatusUnauthorized)
+	}
+
+	acceptedAt, err := h.service.AcceptRules(userID)
+	if err != nil {
+		if err.Error() == "user not found" {
+			return utils.SendError(c, "Competitor profile not found", fiber.StatusNotFound)
+		}
+		return utils.SendError(c, "Failed to accept platform rules", fiber.StatusInternalServerError)
+	}
+
+	return utils.SendSuccess(c, "Rules accepted successfully", fiber.Map{
+		"accepted_rules_at": acceptedAt,
+	})
+}

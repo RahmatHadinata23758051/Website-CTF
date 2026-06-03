@@ -13,6 +13,7 @@ export interface AccountUser {
   name:       string;
   email:      string;
   role:       string;
+  accepted_rules_at?: string;
   created_at: string;
   updated_at: string;
 }
@@ -29,4 +30,12 @@ export interface ChangePasswordResponse {
   success: boolean;
   message: string;
   data: null;
+}
+
+export interface AcceptRulesResponse {
+  success: boolean;
+  message: string;
+  data: {
+    accepted_rules_at: string;
+  };
 }

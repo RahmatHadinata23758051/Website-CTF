@@ -22,12 +22,13 @@ func NewAccountService(accountRepo *repositories.AccountRepository) *AccountServ
 }
 
 type AccountUserDTO struct {
-	ID        uuid.UUID `json:"id"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Role      string    `json:"role"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID              uuid.UUID  `json:"id"`
+	Name            string     `json:"name"`
+	Email           string     `json:"email"`
+	Role            string     `json:"role"`
+	AcceptedRulesAt *time.Time `json:"accepted_rules_at,omitempty"`
+	CreatedAt       time.Time  `json:"created_at"`
+	UpdatedAt       time.Time  `json:"updated_at"`
 }
 
 // UpdateProfile updates the display name and returns the updated user details.
@@ -54,12 +55,13 @@ func (s *AccountService) UpdateProfile(userID uuid.UUID, name string) (*AccountU
 	}
 
 	return &AccountUserDTO{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		Role:      user.Role,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		ID:              user.ID,
+		Name:            user.Name,
+		Email:           user.Email,
+		Role:            user.Role,
+		AcceptedRulesAt: user.AcceptedRulesAt,
+		CreatedAt:       user.CreatedAt,
+		UpdatedAt:       user.UpdatedAt,
 	}, nil
 }
 
@@ -89,4 +91,26 @@ func (s *AccountService) ChangePassword(userID uuid.UUID, currentPassword, newPa
 
 	// 4. Save new password hash
 	return s.accountRepo.UpdatePasswordHash(userID, newHash)
+}
+
+// AcceptRules updates the competitor's accepted_rules_at and returns the timestamp.
+func (s *AccountService) AcceptRules(userID uuid.UUID) (*time.Time, error) {
+	db := database.DB
+	var user models.User
+
+	// 1. Fetch user to verify existence
+	if err := db.First(&user, userID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("user not found")
+		}
+		return nil, err
+	}
+
+	// 2. Perform update
+	acceptedAt := time.Now()
+	if err := s.accountRepo.AcceptRules(userID, acceptedAt); err != nil {
+		return nil, err
+	}
+
+	return &acceptedAt, nil
 }

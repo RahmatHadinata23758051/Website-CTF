@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateProfile, changePassword } from "./api";
+import { updateProfile, changePassword, acceptRules } from "./api";
 import { useAuthStore } from "../../stores/authStore";
 
 export function useUpdateProfile() {
@@ -23,5 +23,25 @@ export function useUpdateProfile() {
 export function useChangePassword() {
   return useMutation({
     mutationFn: changePassword
+  });
+}
+
+export function useAcceptRules() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: acceptRules,
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["profileSummary"] });
+      
+      const { user, token, setAuth } = useAuthStore.getState();
+      if (token && user && res?.success && res?.data?.accepted_rules_at) {
+        const updatedUser = {
+          ...user,
+          accepted_rules_at: res.data.accepted_rules_at
+        };
+        setAuth(token, updatedUser);
+      }
+    }
   });
 }

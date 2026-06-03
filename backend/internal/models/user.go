@@ -16,10 +16,11 @@ type User struct {
 	Role         string         `gorm:"size:50;not null;default:'user';" json:"role"`
 	IsBanned     bool           `gorm:"not null;default:false;" json:"is_banned"`
 	BannedAt     *time.Time     `json:"banned_at,omitempty"`
-	BannedReason *string        `gorm:"size:255;" json:"banned_reason,omitempty"`
-	CreatedAt    time.Time      `json:"created_at"`
-	UpdatedAt    time.Time      `json:"updated_at"`
-	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`
+	BannedReason    *string        `gorm:"size:255;" json:"banned_reason,omitempty"`
+	AcceptedRulesAt *time.Time     `json:"accepted_rules_at,omitempty"`
+	CreatedAt       time.Time      `json:"created_at"`
+	UpdatedAt       time.Time      `json:"updated_at"`
+	DeletedAt       gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 // BeforeCreate hook to generate a UUID if not already set.
