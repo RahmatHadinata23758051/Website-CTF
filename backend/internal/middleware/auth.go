@@ -77,7 +77,7 @@ func RequireAuth(cfg *config.Config) fiber.Handler {
 
 		// Check user status in database dynamically
 		var user models.User
-		if err := database.DB.Select("id, role, is_banned").Where("id = ?", claims.UserID).First(&user).Error; err != nil {
+		if err := database.DB.Select("id, role, is_banned, accepted_rules_at").Where("id = ?", claims.UserID).First(&user).Error; err != nil {
 			return utils.SendError(c, "Missing or invalid authorization token", fiber.StatusUnauthorized)
 		}
 
@@ -88,6 +88,7 @@ func RequireAuth(cfg *config.Config) fiber.Handler {
 		c.Locals("user_id", user.ID.String())
 		c.Locals("email", claims.Email)
 		c.Locals("role", user.Role)
+		c.Locals("accepted_rules", user.AcceptedRulesAt != nil)
 
 		return c.Next()
 	}
@@ -129,13 +130,14 @@ func OptionalAuth(cfg *config.Config) fiber.Handler {
 		claims, ok := token.Claims.(*UserClaims)
 		if ok {
 			var user models.User
-			if err := database.DB.Select("id, role, is_banned").Where("id = ?", claims.UserID).First(&user).Error; err == nil {
+			if err := database.DB.Select("id, role, is_banned, accepted_rules_at").Where("id = ?", claims.UserID).First(&user).Error; err == nil {
 				if user.IsBanned {
 					return utils.SendError(c, "Account is banned", fiber.StatusForbidden)
 				}
 				c.Locals("user_id", user.ID.String())
 				c.Locals("email", claims.Email)
 				c.Locals("role", user.Role)
+				c.Locals("accepted_rules", user.AcceptedRulesAt != nil)
 			}
 		}
 
@@ -148,8 +150,9 @@ func RequireAdmin() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		role, ok := c.Locals("role").(string)
 		if !ok || role != "admin" {
-			return utils.SendError(c, "Forbidden: administrator privileges required", fiber.StatusForbidden)
+			return utils.SendError(c, "Admin access required", fiber.StatusForbidden)
 		}
 		return c.Next()
 	}
 }
+

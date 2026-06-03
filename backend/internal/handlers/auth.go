@@ -73,10 +73,11 @@ func Register(cfg *config.Config) fiber.Handler {
 		return utils.SendSuccess(c, "User registered successfully", fiber.Map{
 			"token": token,
 			"user": fiber.Map{
-				"id":    newUser.ID,
-				"name":  newUser.Name,
-				"email": newUser.Email,
-				"role":  newUser.Role,
+				"id":                newUser.ID,
+				"name":              newUser.Name,
+				"email":             newUser.Email,
+				"role":              newUser.Role,
+				"accepted_rules_at": newUser.AcceptedRulesAt,
 			},
 		}, fiber.StatusCreated)
 	}
@@ -134,10 +135,11 @@ func Login(cfg *config.Config) fiber.Handler {
 		return utils.SendSuccess(c, "Login successful", fiber.Map{
 			"token": token,
 			"user": fiber.Map{
-				"id":    user.ID,
-				"name":  user.Name,
-				"email": user.Email,
-				"role":  user.Role,
+				"id":                user.ID,
+				"name":              user.Name,
+				"email":             user.Email,
+				"role":              user.Role,
+				"accepted_rules_at": user.AcceptedRulesAt,
 			},
 		})
 	}
@@ -178,12 +180,13 @@ func GetMe(c *fiber.Ctx) error {
 	// Format response nested inside user key exactly as required
 	return utils.SendSuccess(c, "Authenticated user retrieved successfully", fiber.Map{
 		"user": fiber.Map{
-			"id":         user.ID,
-			"name":       user.Name,
-			"email":      user.Email,
-			"role":       user.Role,
-			"created_at": user.CreatedAt,
-			"updated_at": user.UpdatedAt,
+			"id":                user.ID,
+			"name":              user.Name,
+			"email":             user.Email,
+			"role":              user.Role,
+			"accepted_rules_at": user.AcceptedRulesAt,
+			"created_at":        user.CreatedAt,
+			"updated_at":        user.UpdatedAt,
 		},
 	})
 }
