@@ -14,6 +14,10 @@ type AdminChallengeRequest struct {
 	AttachmentURL *string `json:"attachment_url"` // Optional
 	ExternalLink  *string `json:"external_link"`  // Optional
 	IsActive      bool    `json:"is_active"`
+	ScoringType   string  `json:"scoring_type"`
+	InitialPoints int     `json:"initial_points"`
+	MinimumPoints int     `json:"minimum_points"`
+	Decay         int     `json:"decay"`
 }
 
 // AdminChallengeStatusRequest defines the input for PATCH /status endpoint.
@@ -35,8 +39,17 @@ func ValidateAdminChallengeCreate(req *AdminChallengeRequest) string {
 	if strings.TrimSpace(req.Difficulty) == "" {
 		return "difficulty is required"
 	}
-	if req.Points <= 0 {
-		return "points must be a positive integer"
+	if req.ScoringType != "static" && req.ScoringType != "dynamic" {
+		return "Invalid scoring configuration"
+	}
+	if req.ScoringType == "static" {
+		if req.Points <= 0 {
+			return "points must be a positive integer"
+		}
+	} else if req.ScoringType == "dynamic" {
+		if req.InitialPoints < 1 || req.MinimumPoints < 1 || req.Decay < 1 || req.InitialPoints < req.MinimumPoints {
+			return "Invalid dynamic scoring configuration"
+		}
 	}
 	if strings.TrimSpace(req.Flag) == "" {
 		return "flag is required for new challenges"
@@ -58,8 +71,17 @@ func ValidateAdminChallengeUpdate(req *AdminChallengeRequest) string {
 	if strings.TrimSpace(req.Difficulty) == "" {
 		return "difficulty is required"
 	}
-	if req.Points <= 0 {
-		return "points must be a positive integer"
+	if req.ScoringType != "static" && req.ScoringType != "dynamic" {
+		return "Invalid scoring configuration"
+	}
+	if req.ScoringType == "static" {
+		if req.Points <= 0 {
+			return "points must be a positive integer"
+		}
+	} else if req.ScoringType == "dynamic" {
+		if req.InitialPoints < 1 || req.MinimumPoints < 1 || req.Decay < 1 || req.InitialPoints < req.MinimumPoints {
+			return "Invalid dynamic scoring configuration"
+		}
 	}
 	// flag is optional on update - if omitted, keep existing flag_hash
 	return ""

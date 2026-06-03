@@ -33,15 +33,18 @@ func (r *ScoreboardRepository) CalculateScoreboard() ([]ScoreboardRowRaw, error)
 
 	// SQL Join logic grouping by competitor details and sorting by:
 	// 1. Highest points
-	// 2. Highest total solves (tiebreaker 1)
-	// 3. Earliest solving time (tiebreaker 2)
+	// 2. Highest total solves
+	// 3. Earliest last_solve_time (NULLS LAST)
+	// 4. Earliest first_solve_time (NULLS LAST)
+	// 5. Older account (user_created_at ASC)
+	// 6. User ID fallback (user_id ASC)
 	err := db.Table("solves").
-		Select("solves.user_id, users.name, SUM(challenges.points) as total_points, COUNT(solves.challenge_id) as total_solves, MAX(solves.solved_at) as last_solve_time").
+		Select("solves.user_id, users.name, SUM(challenges.points) as total_points, COUNT(solves.challenge_id) as total_solves, MAX(solves.solved_at) as last_solve_time, MIN(solves.solved_at) as first_solve_time, users.created_at as user_created_at").
 		Joins("JOIN users ON users.id = solves.user_id AND users.deleted_at IS NULL").
 		Joins("JOIN challenges ON challenges.id = solves.challenge_id AND challenges.deleted_at IS NULL").
-		Where("challenges.is_active = ?", true).
-		Group("solves.user_id, users.name").
-		Order("total_points DESC, total_solves DESC, last_solve_time ASC").
+		Where("challenges.is_active = ? AND users.role = ? AND users.is_banned = ?", true, "user", false).
+		Group("solves.user_id, users.name, users.created_at").
+		Order("total_points DESC, total_solves DESC, last_solve_time ASC NULLS LAST, first_solve_time ASC NULLS LAST, users.created_at ASC, solves.user_id ASC").
 		Find(&rows).Error
 
 	return rows, err

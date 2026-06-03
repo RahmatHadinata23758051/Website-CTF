@@ -16,6 +16,7 @@ type ChallengeListDTO struct {
 	Category   string    `json:"category"`
 	Difficulty string    `json:"difficulty"`
 	Points     int       `json:"points"`
+	SolveCount int64     `json:"solve_count"`
 	IsSolved   bool      `json:"is_solved"`
 }
 
@@ -28,6 +29,7 @@ type ChallengeDetailDTO struct {
 	Category      string    `json:"category"`
 	Difficulty    string    `json:"difficulty"`
 	Points        int       `json:"points"`
+	SolveCount    int64     `json:"solve_count"`
 	AttachmentURL *string   `json:"attachment_url"`
 	ExternalLink  *string   `json:"external_link"`
 	IsSolved      bool      `json:"is_solved"`
@@ -71,6 +73,8 @@ func (s *ChallengeService) GetChallengeList(userIDStr string, category, difficul
 			}
 		}
 
+		solveCount, _ := s.repo.CountSolves(c.ID)
+
 		dtoList = append(dtoList, ChallengeListDTO{
 			ID:         c.ID,
 			Title:      c.Title,
@@ -78,6 +82,7 @@ func (s *ChallengeService) GetChallengeList(userIDStr string, category, difficul
 			Category:   c.Category,
 			Difficulty: c.Difficulty,
 			Points:     c.Points,
+			SolveCount: solveCount,
 			IsSolved:   isSolved,
 		})
 	}
@@ -119,6 +124,8 @@ func (s *ChallengeService) GetChallengeDetail(slug string, userIDStr string) (*C
 		externalLink = &c.ExternalLink
 	}
 
+	solveCount, _ := s.repo.CountSolves(c.ID)
+
 	return &ChallengeDetailDTO{
 		ID:            c.ID,
 		Title:         c.Title,
@@ -127,6 +134,7 @@ func (s *ChallengeService) GetChallengeDetail(slug string, userIDStr string) (*C
 		Category:      c.Category,
 		Difficulty:    c.Difficulty,
 		Points:        c.Points,
+		SolveCount:    solveCount,
 		AttachmentURL: attachmentURL,
 		ExternalLink:  externalLink,
 		IsSolved:      isSolved,

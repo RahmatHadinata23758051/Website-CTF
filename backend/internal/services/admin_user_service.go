@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"ctf-platform/backend/internal/database"
 	"ctf-platform/backend/internal/repositories"
 
 	"github.com/google/uuid"
@@ -92,6 +93,8 @@ func (s *AdminUserService) UpdateUserRole(actorID, targetID uuid.UUID, newRole s
 		return nil, err
 	}
 
+	_ = RecalculateAllChallenges(database.DB)
+
 	return s.repo.GetUserByID(targetID)
 }
 
@@ -129,6 +132,8 @@ func (s *AdminUserService) BanUser(actorID, targetID uuid.UUID, reason string) (
 		return nil, err
 	}
 
+	_ = RecalculateAllChallenges(database.DB)
+
 	return s.repo.GetUserByID(targetID)
 }
 
@@ -149,6 +154,8 @@ func (s *AdminUserService) UnbanUser(targetID uuid.UUID) (*repositories.AdminUse
 	if err := s.repo.UnbanUser(targetID); err != nil {
 		return nil, err
 	}
+
+	_ = RecalculateAllChallenges(database.DB)
 
 	return s.repo.GetUserByID(targetID)
 }

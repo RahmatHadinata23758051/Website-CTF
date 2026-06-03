@@ -58,6 +58,15 @@ func (s *SubmissionService) ProcessSubmission(
 		return nil, errors.New("invalid_user_format")
 	}
 
+	// 1b. Check user rules acceptance
+	var user models.User
+	if err := database.DB.First(&user, userID).Error; err != nil {
+		return nil, err
+	}
+	if user.AcceptedRulesAt == nil {
+		return nil, errors.New("rules_not_accepted")
+	}
+
 	// 2. Fetch active challenge by slug
 	challenge, err := s.challengeRepo.FindBySlug(slug)
 	if err != nil {
@@ -121,6 +130,16 @@ func (s *SubmissionService) ProcessSubmission(
 		// Insert solve record atomically
 		if err := s.subRepo.CreateSolve(userID, challenge.ID); err != nil {
 			return nil, errors.New("failed_to_register_solve")
+		}
+
+		// Recalculate points for this challenge
+		if err := RecalculateChallengePoints(database.DB, challenge.ID); err != nil {
+			log.Printf("[SCORING] Warning: failed to recalculate challenge points: %v\n", err)
+		}
+
+		// Fetch the updated challenge to return the correct points
+		if updated, err := s.challengeRepo.FindBySlug(slug); err == nil {
+			challenge = updated
 		}
 
 		return &SubmissionResponse{

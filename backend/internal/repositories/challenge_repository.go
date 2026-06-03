@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
+
 // ChallengeRepository defines active GORM queries for challenges.
 type ChallengeRepository struct{}
 
@@ -67,4 +68,14 @@ func (r *ChallengeRepository) IsSolved(userID uuid.UUID, challengeID uuid.UUID) 
 		Count(&count).Error
 
 	return count > 0, err
+}
+
+// CountSolves returns the total number of distinct users who solved a specific challenge.
+func (r *ChallengeRepository) CountSolves(challengeID uuid.UUID) (int64, error) {
+	db := database.DB
+	var count int64
+	err := db.Model(&models.Solve{}).
+		Where("challenge_id = ?", challengeID).
+		Count(&count).Error
+	return count, err
 }

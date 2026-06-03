@@ -20,6 +20,10 @@ type Challenge struct {
 	AttachmentURL string         `gorm:"size:512;" json:"attachment_url,omitempty"`
 	ExternalLink  string         `gorm:"size:512;" json:"external_link,omitempty"`
 	IsActive      bool           `gorm:"not null;default:true;index;" json:"is_active"`
+	ScoringType   string         `gorm:"size:50;not null;default:'static';" json:"scoring_type"`
+	InitialPoints int            `gorm:"not null;default:0;" json:"initial_points"`
+	MinimumPoints int            `gorm:"not null;default:0;" json:"minimum_points"`
+	Decay         int            `gorm:"not null;default:0;" json:"decay"`
 	CreatedAt     time.Time      `json:"created_at"`
 	UpdatedAt     time.Time      `json:"updated_at"`
 	DeletedAt     gorm.DeletedAt `gorm:"index" json:"-"`

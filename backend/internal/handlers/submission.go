@@ -60,6 +60,9 @@ func (h *SubmissionHandler) SubmitFlag(c *fiber.Ctx) error {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return utils.SendError(c, "Challenge not found", fiber.StatusNotFound)
 		}
+		if err.Error() == "rules_not_accepted" {
+			return utils.SendError(c, "You must accept the platform rules before submitting flags", fiber.StatusForbidden)
+		}
 		if err.Error() == "rate_limit_exceeded" {
 			return utils.SendError(c, "Too many submissions. Please wait 1 minute.", fiber.StatusTooManyRequests)
 		}

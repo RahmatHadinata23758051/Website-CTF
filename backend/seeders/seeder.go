@@ -3,6 +3,7 @@ package seeders
 import (
 	"log"
 	"os"
+	"time"
 
 	"ctf-platform/backend/internal/models"
 	"ctf-platform/backend/internal/utils"
@@ -36,29 +37,33 @@ func seedUsers(db *gorm.DB) {
 	// DEVELOPMENT-ONLY credentials — do not use in production
 	adminHash, _ := utils.HashPassword("admin123!")
 	competitorHash, _ := utils.HashPassword("user123!")
+	now := time.Now()
 
 	var users []models.User
 
 	// Main administrative bootstrap profile
 	users = append(users, models.User{
-		Name:         "Admin",
-		Email:        "admin@rblxsec.local",
-		PasswordHash: adminHash,
-		Role:         "admin",
+		Name:            "Admin",
+		Email:           "admin@rblxsec.local",
+		PasswordHash:    adminHash,
+		Role:            "admin",
+		AcceptedRulesAt: &now,
 	})
 
 	// Sample players seeded only if requested for dev testing
 	if os.Getenv("SEED_SAMPLE_DATA") == "true" {
 		users = append(users, models.User{
-			Name:         "Admin Operator",
-			Email:        "admin@ctf.com",
-			PasswordHash: adminHash,
-			Role:         "admin",
+			Name:            "Admin Operator",
+			Email:           "admin@ctf.com",
+			PasswordHash:    adminHash,
+			Role:            "admin",
+			AcceptedRulesAt: &now,
 		}, models.User{
-			Name:         "Competitor One",
-			Email:        "competitor@ctf.com",
-			PasswordHash: competitorHash,
-			Role:         "user",
+			Name:            "Competitor One",
+			Email:           "competitor@ctf.com",
+			PasswordHash:    competitorHash,
+			Role:            "user",
+			AcceptedRulesAt: &now,
 		})
 	}
 
