@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"time"
+
 	"ctf-platform/backend/internal/database"
 	"ctf-platform/backend/internal/models"
 
@@ -23,4 +25,10 @@ func (r *AccountRepository) UpdateDisplayName(userID uuid.UUID, name string) err
 func (r *AccountRepository) UpdatePasswordHash(userID uuid.UUID, hash string) error {
 	db := database.DB
 	return db.Model(&models.User{}).Where("id = ?", userID).Update("password_hash", hash).Error
+}
+
+// AcceptRules updates the competitor's accepted_rules_at timestamp.
+func (r *AccountRepository) AcceptRules(userID uuid.UUID, acceptedAt time.Time) error {
+	db := database.DB
+	return db.Model(&models.User{}).Where("id = ?", userID).Update("accepted_rules_at", acceptedAt).Error
 }
