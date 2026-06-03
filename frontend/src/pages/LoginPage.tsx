@@ -6,6 +6,8 @@ import { Alert } from "../components/ui/Alert";
 import { login } from "../features/auth/api";
 import { useAuthStore } from "../stores/authStore";
 
+import { getErrorMessage } from "../lib/error";
+
 export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,17 +27,17 @@ export function LoginPage() {
       const response = await login(email, password);
       if (response.success && response.data) {
         setAuth(response.data.token, response.data.user);
-        const from = (location.state as any)?.from || "/challenges";
-        navigate(from);
+        if (!response.data.user.accepted_rules_at) {
+          navigate("/onboarding");
+        } else {
+          const from = (location.state as any)?.from || "/challenges";
+          navigate(from);
+        }
       } else {
         setError(response.message || "Authentication rejected. Invalid credentials.");
       }
     } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Network connection failure. Unable to reach the server.");
-      }
+      setError(getErrorMessage(err, "Network connection failure. Unable to reach the server."));
     } finally {
       setIsLoading(false);
     }

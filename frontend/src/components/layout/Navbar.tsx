@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, Layers, Power, ShieldCheck, Settings } from "lucide-react";
+import { User, Layers, Power, ShieldCheck, Settings, Users2 } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
 import { logout } from "../../features/auth/api";
 import { ThemeToggle } from "./ThemeToggle";
@@ -82,36 +82,51 @@ export function Navbar() {
 
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-1 h-full">
-          <Link to="/" className={navItemClass("/")}>
-            Overview
-          </Link>
-          <Link to="/challenges" className={navItemClass("/challenges")}>
-            Challenges
-          </Link>
-          <Link to="/scoreboard" className={navItemClass("/scoreboard")}>
-            Scoreboard
-          </Link>
-          <Link to="/profile" className={navItemClass("/profile")}>
-            <div className="flex items-center gap-1.5">
-              <User className="h-3.5 w-3.5" />
-              Profile
-            </div>
-          </Link>
-          {isAuthenticated && (
-            <Link to="/account" className={navItemClass("/account")}>
-              <div className="flex items-center gap-1.5">
-                <Settings className="h-3.5 w-3.5" />
-                Account
+          {isAuthenticated && !user?.accepted_rules_at ? (
+            <Link to="/onboarding" className={navItemClass("/onboarding")}>
+              <div className="flex items-center gap-1.5 text-cyber-cyan font-bold animate-pulse">
+                Complete Onboarding
               </div>
             </Link>
-          )}
-          {isAuthenticated && user?.role === "admin" && (
-            <Link to="/admin" className={navItemClass("/admin")}>
-              <div className="flex items-center gap-1.5 text-cyber-violet font-bold">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Admin Panel
-              </div>
-            </Link>
+          ) : (
+            <>
+              <Link to="/challenges" className={navItemClass("/challenges")}>
+                Challenges
+              </Link>
+              <Link to="/scoreboard" className={navItemClass("/scoreboard")}>
+                Scoreboard
+              </Link>
+              {isAuthenticated && (
+                <Link to="/users" className={navItemClass("/users")}>
+                  <div className="flex items-center gap-1.5">
+                    <Users2 className="h-3.5 w-3.5" />
+                    Players
+                  </div>
+                </Link>
+              )}
+              <Link to="/profile" className={navItemClass("/profile")}>
+                <div className="flex items-center gap-1.5">
+                  <User className="h-3.5 w-3.5" />
+                  Profile
+                </div>
+              </Link>
+              {isAuthenticated && (
+                <Link to="/account" className={navItemClass("/account")}>
+                  <div className="flex items-center gap-1.5">
+                    <Settings className="h-3.5 w-3.5" />
+                    Account
+                  </div>
+                </Link>
+              )}
+              {isAuthenticated && user?.role === "admin" && (
+                <Link to="/admin" className={navItemClass("/admin")}>
+                  <div className="flex items-center gap-1.5 text-cyber-violet font-bold">
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    Admin Panel
+                  </div>
+                </Link>
+              )}
+            </>
           )}
         </nav>
 
@@ -175,57 +190,72 @@ export function Navbar() {
           className="md:hidden w-full border-t px-4 py-4 flex flex-col gap-2 text-left transition-colors duration-200"
           style={{ backgroundColor: "var(--bg)", borderTopColor: "var(--border)" }}
         >
-          <Link
-            to="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
-              }`}
-          >
-            Overview
-          </Link>
-          <Link
-            to="/challenges"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/challenges") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
-              }`}
-          >
-            Challenges
-          </Link>
-          <Link
-            to="/scoreboard"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/scoreboard") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
-              }`}
-          >
-            Scoreboard
-          </Link>
-          <Link
-            to="/profile"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/profile") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
-              }`}
-          >
-            Profile
-          </Link>
-          {isAuthenticated && (
+          {isAuthenticated && !user?.accepted_rules_at ? (
             <Link
-              to="/account"
+              to="/onboarding"
               onClick={() => setMobileMenuOpen(false)}
-              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/account") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/onboarding") ? "bg-slate-900 text-cyber-cyan font-bold animate-pulse" : "text-cyber-cyan font-bold animate-pulse"
                 }`}
             >
-              Account
+              Complete Onboarding
             </Link>
-          )}
-          {isAuthenticated && user?.role === "admin" && (
-            <Link
-              to="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/admin") ? "bg-slate-900 text-cyber-violet font-bold" : "text-cyber-violet/85"
-                }`}
-            >
-              Admin Panel
-            </Link>
+          ) : (
+            <>
+              <Link
+                to="/challenges"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/challenges") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+                  }`}
+              >
+                Challenges
+              </Link>
+              <Link
+                to="/scoreboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/scoreboard") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+                  }`}
+              >
+                Scoreboard
+              </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/users"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/users") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+                    }`}
+                >
+                  Players
+                </Link>
+              )}
+              <Link
+                to="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/profile") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+                  }`}
+              >
+                Profile
+              </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/account"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/account") ? "bg-slate-900 text-cyber-cyan font-bold" : "text-slate-400"
+                    }`}
+                >
+                  Account
+                </Link>
+              )}
+              {isAuthenticated && user?.role === "admin" && (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`w-full py-2.5 text-left px-3 rounded font-mono text-xs uppercase tracking-wider ${isActive("/admin") ? "bg-slate-900 text-cyber-violet font-bold" : "text-cyber-violet/85"
+                    }`}
+                >
+                  Admin Panel
+                </Link>
+              )}
+            </>
           )}
         </div>
       )}

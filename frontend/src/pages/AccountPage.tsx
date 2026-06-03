@@ -5,6 +5,7 @@ import { Input } from "../components/ui/Input";
 import { Alert } from "../components/ui/Alert";
 import { useAuthStore } from "../stores/authStore";
 import { useUpdateProfile, useChangePassword } from "../features/account/hooks";
+import { getErrorMessage } from "../lib/error";
 
 export function AccountPage() {
   const user = useAuthStore((state) => state.user);
@@ -21,13 +22,13 @@ export function AccountPage() {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [passwordSuccess, setPasswordSuccess] = React.useState<string | null>(null);
   const [passwordError, setPasswordError] = React.useState<string | null>(null);
-
-  // Sync state if user details load dynamically
-  React.useEffect(() => {
+  const [prevUser, setPrevUser] = React.useState(user);
+  if (prevUser !== user) {
+    setPrevUser(user);
     if (user?.name) {
       setDisplayName(user.name);
     }
-  }, [user]);
+  }
 
   // Handle Display Name Update
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -56,8 +57,7 @@ export function AccountPage() {
           }
         },
         onError: (err: any) => {
-          const apiMsg = err?.response?.data?.message;
-          setProfileError(apiMsg || "Failed to update profile settings.");
+          setProfileError(getErrorMessage(err, "Failed to update profile settings."));
         }
       }
     );
@@ -109,8 +109,7 @@ export function AccountPage() {
           }
         },
         onError: (err: any) => {
-          const apiMsg = err?.response?.data?.message;
-          setPasswordError(apiMsg || "Failed to change password securely.");
+          setPasswordError(getErrorMessage(err, "Failed to change password securely."));
         }
       }
     );

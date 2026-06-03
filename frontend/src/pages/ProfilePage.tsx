@@ -1,6 +1,7 @@
 import { UserCheck, ShieldCheck, Trophy, Layers } from "lucide-react";
 import { StatCard } from "../components/ui/StatCard";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { PageLoading } from "../components/ui/PageLoading";
+import { ConnectionError } from "../components/ui/ConnectionError";
 import { Alert } from "../components/ui/Alert";
 import { DifficultyBadge } from "../components/ctf/DifficultyBadge";
 import { useProfileSummary } from "../features/profile/hooks";
@@ -11,30 +12,12 @@ export function ProfilePage() {
 
   // Loading State Display
   if (isLoading) {
-    return (
-      <div className="w-full min-h-[calc(100vh-160px)] flex flex-col items-center justify-center py-16 select-none">
-        <LoadingSpinner />
-      </div>
-    );
+    return <PageLoading message="Synchronizing operator profile..." />;
   }
 
   // Error State Display
   if (error || !summaryRes?.success) {
-    return (
-      <div className="py-16 text-center max-w-lg mx-auto space-y-6">
-        <div className="max-w-full text-left">
-          <Alert variant="error" title="SYNCHRONIZATION ERROR">
-            Unable to synchronize operator profile details. Check backend connection.
-          </Alert>
-        </div>
-        <button
-          onClick={() => refetch()}
-          className="px-6 py-2.5 bg-bg hover:bg-surface border border-border-ui text-xs font-mono font-bold uppercase tracking-wider text-fg-muted cursor-pointer transition-colors"
-        >
-          RECONNECT PROFILE FEED
-        </button>
-      </div>
-    );
+    return <ConnectionError onRetry={refetch} />;
   }
 
   const { user, stats, recent_solves, solved_challenges, category_breakdown } = summaryRes.data;

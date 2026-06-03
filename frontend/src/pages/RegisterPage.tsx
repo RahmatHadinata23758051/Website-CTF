@@ -6,6 +6,8 @@ import { Alert } from "../components/ui/Alert";
 import { register } from "../features/auth/api";
 import { useAuthStore } from "../stores/authStore";
 
+import { getErrorMessage } from "../lib/error";
+
 export function RegisterPage() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -40,16 +42,12 @@ export function RegisterPage() {
       const response = await register(name, email, password);
       if (response.success && response.data) {
         setAuth(response.data.token, response.data.user);
-        navigate("/profile");
+        navigate("/onboarding");
       } else {
         setError(response.message || "Registration failed. Please check inputs.");
       }
     } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Network connection failure. Unable to reach the server.");
-      }
+      setError(getErrorMessage(err, "Network connection failure. Unable to reach the server."));
     } finally {
       setIsLoading(false);
     }

@@ -10,9 +10,15 @@ import { ProfilePage } from "../pages/ProfilePage";
 import { AccountPage } from "../pages/AccountPage";
 import { ForgotPasswordPage } from "../pages/ForgotPasswordPage";
 import { AdminPage } from "../pages/admin/AdminPage";
+import { UsersPage } from "../pages/UsersPage";
+import { UserPublicProfilePage } from "../pages/UserPublicProfilePage";
 import { RulesPage } from "../pages/legal/RulesPage";
 import { TermsPage } from "../pages/legal/TermsPage";
 import { PrivacyPage } from "../pages/legal/PrivacyPage";
+import { OnboardingPage } from "../pages/OnboardingPage";
+import { NotFoundPage } from "../pages/system/NotFoundPage";
+import { UnauthorizedPage } from "../pages/system/UnauthorizedPage";
+import { ForbiddenPage } from "../pages/system/ForbiddenPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
@@ -52,6 +58,10 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
+            path: "onboarding",
+            element: <OnboardingPage />,
+          },
+          {
             path: "challenges",
             element: <ChallengesPage />,
           },
@@ -70,6 +80,19 @@ export const router = createBrowserRouter([
           {
             path: "account",
             element: <AccountPage />,
+          },
+          {
+            path: "users",
+            children: [
+              {
+                index: true,
+                element: <UsersPage />,
+              },
+              {
+                path: ":id",
+                element: <UserPublicProfilePage />,
+              },
+            ],
           },
         ],
       },
@@ -99,5 +122,21 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "404",
+    element: <NotFoundPage />,
+  },
+  {
+    path: "401",
+    element: <UnauthorizedPage />,
+  },
+  {
+    path: "403",
+    element: <ForbiddenPage />,
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
